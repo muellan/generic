@@ -17,4 +17,10 @@ Functions
 - make_application_chain
 - make_uniform
 - make_generate
+- make_copy_elems
 - apply(function/functor/lambda, tuple of arguments)
+
+
+Prerequisites
+    requires C++11 conforming compiler
+    tested with g++ 4.7.2
