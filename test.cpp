@@ -15,11 +15,11 @@
 #ifdef AM_USE_TESTS
 
 #include "chain_apply.h"
-#include "chain_calls.h"
+#include "compositions.h"
 #include "factories.h"
 #include "int_sequence.h"
 #include "map_trait.h"
-#include "memoizing_fn.h"
+#include "cached_fn.h"
 #include "timer.h"
 #include "tuple_apply.h"
 #include "tuple_hash.h"

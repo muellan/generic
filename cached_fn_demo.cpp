@@ -8,13 +8,13 @@
  *
  *****************************************************************************/
 
-#ifndef AM_MEMOIZING_FUNCTION_DEMO_H_
-#define AM_MEMOIZING_FUNCTION_DEMO_H_
+#ifndef AM_CACHED_FUNCTION_DEMO_H_
+#define AM_CACHED_FUNCTION_DEMO_H_
 
 #include <cstdint>
 #include <iostream>
 
-#include "memoizing_fn.h"
+#include "cached_fn.h"
 #include "timer.h"
 
 
@@ -43,10 +43,10 @@ struct my_ftor {
 
 
 //-------------------------------------------------------------------
-void memoizing_1()
+void cached_1()
 {
 
-	//make new memoizing_functions with signature double(int,float)
+	//make new cached_functions with signature double(int,float)
 	//can take any callable object with return type double and
 	//two int arguments
 
@@ -54,26 +54,26 @@ void memoizing_1()
 	//mabye I'll get back to it in the future...
 
 	//with functions
-	auto m1 = memoizing_function<double(int,int)>(my_fn);
+	auto m1 = cached_function<double(int,int)>(my_fn);
 	std::cout << m1(1,2) << std::endl;
 	std::cout << m1(1,2) << std::endl;
 
 
 	//with function objects
-	auto m2 = memoizing_function<double(int,int)>(my_ftor());
+	auto m2 = cached_function<double(int,int)>(my_ftor());
 	std::cout << m2(1,2) << std::endl;
 	std::cout << m2(1,2) << std::endl;
 
 
 	//with lambdas
-	auto m3 = memoizing_function<double(int,int)>(
+	auto m3 = cached_function<double(int,int)>(
 		[](int x, int y) -> double {return 1.1 * (x+y);}
 	);
 	std::cout << m3(1,2) << std::endl;
 	std::cout << m3(1,2) << std::endl;
 
 
-	auto m4 = memoizing_function<int(int)>([](int x) {return x*x;});
+	auto m4 = cached_function<int(int)>([](int x) {return x*x;});
 	std::cout << m4(5) << std::endl;
 	std::cout << m4(5) << std::endl;
 }
@@ -81,9 +81,9 @@ void memoizing_1()
 
 
 //-------------------------------------------------------------------
-void memoizing_2()
+void cached_2()
 {
-	auto m = memoizing_function<double(int,int)>(
+	auto m = cached_function<double(int,int)>(
 		[](int a, int b) -> double {
 			double x = 0;
 			for(int i = 0; i < a; ++i) {

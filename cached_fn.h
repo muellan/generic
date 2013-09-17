@@ -8,8 +8,8 @@
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_MEMOIZING_FUNCTION_H_
-#define AM_GENERIC_MEMOIZING_FUNCTION_H_
+#ifndef AM_GENERIC_CACHED_FUNCTION_H_
+#define AM_GENERIC_CACHED_FUNCTION_H_
 
 #include <type_traits>
 #include <functional>
@@ -25,18 +25,18 @@ namespace gen {
 
 /*****************************************************************************
  *
- * @brief function value cache with a similar template parameter interface
+ * @brief function with return value cache with a similar template interface
  *        as std::function
  *
  *
  *****************************************************************************/
 template<class Signature>
-class memoizing_function; //not available
+class cached_function; //not available
 
 
 //-------------------------------------------------------------------
 template<class Ret, class... Args>
-class memoizing_function<Ret(Args...)>
+class cached_function<Ret(Args...)>
 {
 	using arg_t = std::tuple<typename std::decay<Args>::type...>;
 
@@ -52,30 +52,30 @@ public:
 	//---------------------------------------------------------------
 	///@brief construct with function object
 	explicit
-	memoizing_function(const functor_t& fn):
+	cached_function(const functor_t& fn):
 		fn_(fn), mem_()
 	{}
 
 	//-----------------------------------------------------
 	///@brief default copy constructor
-	memoizing_function(const memoizing_function&) = default;
+	cached_function(const cached_function&) = default;
 
 	//-----------------------------------------------------
 	///@brief move constructor
-	memoizing_function(memoizing_function&& src):
+	cached_function(cached_function&& src):
 		fn_(std::move(src.fn_)), mem_(std::move(src.mem_))
 	{}
 
 
 	//---------------------------------------------------------------
 	///@brief default copy assignment operator
-	memoizing_function&
-	operator = (const memoizing_function&) = default;
+	cached_function&
+	operator = (const cached_function&) = default;
 
 	//-----------------------------------------------------
 	///@brief move assignment operator
-	memoizing_function&
-	operator = (memoizing_function&& src)
+	cached_function&
+	operator = (cached_function&& src)
 	{
 		using std::swap;
 		swap(fn_, src.fn_);
@@ -85,7 +85,7 @@ public:
 
 	//---------------------------------------------------------------
 	///@brief resets functor member and clears cache
-	memoizing_function&
+	cached_function&
 	operator = (const functor_t& fn)
 	{
 		fn_ = fn;
