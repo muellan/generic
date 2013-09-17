@@ -67,7 +67,10 @@ Functions
 </p>
   
 
-- apply(function/functor/lambda, tuple of arguments)
+- apply(function/functor/lambda, tuple of arguments)</br>
+<p>
+  explodes tuple arguments into function arguments
+</p>
 
 
 Requirements
