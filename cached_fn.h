@@ -97,7 +97,7 @@ public:
 	//---------------------------------------------------------------
 	/// @brief functor call with cache lookup
 	const Ret&
-	operator() (const Args&... args) const
+	operator() (const Args&... args)
 	{
 		//pack arguments into tuple
 		auto arg = arg_t{args...};
@@ -118,7 +118,7 @@ private:
 
 	//mutable preserves the const-ness of operator() which
 	//one would expected from a normal function call
-	mutable std::unordered_map<arg_t,result_type,hasher_t> mem_;
+	std::unordered_map<arg_t,result_type,hasher_t> mem_;
 };
 
 
