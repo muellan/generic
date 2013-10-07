@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <functional>
 #include <unordered_map>
+#include <mutex>
 
 #include "tuple_hash.h"
 
@@ -25,7 +26,7 @@ namespace gen {
 
 /*****************************************************************************
  *
- * @brief function with return value cache with a similar template interface
+ * @brief function value cache with a similar template parameter interface
  *        as std::function
  *
  *
@@ -97,10 +98,12 @@ public:
 	//---------------------------------------------------------------
 	/// @brief functor call with cache lookup
 	const Ret&
-	operator() (const Args&... args)
+	operator() (const Args&... args) const  //logically const
 	{
 		//pack arguments into tuple
 		auto arg = arg_t{args...};
+
+		auto lock = std::unique_lock<std::mutex>{mutables_};
 
 		//if result cached -> return cached value
 		auto it = mem_.find(arg);
@@ -116,9 +119,10 @@ public:
 private:
 	functor_t fn_;
 
-	//mutable preserves the const-ness of operator() which
+	//note: mutable preserves the const-ness of operator() which
 	//one would expected from a normal function call
-	std::unordered_map<arg_t,result_type,hasher_t> mem_;
+	mutable std::mutex mutables_;
+	mutable std::unordered_map<arg_t,result_type,hasher_t> mem_;
 };
 
 
