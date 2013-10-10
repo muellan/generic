@@ -8,9 +8,6 @@
  *
  *****************************************************************************/
 
-#ifndef AM_CACHED_FUNCTION_DEMO_H_
-#define AM_CACHED_FUNCTION_DEMO_H_
-
 #include <cstdint>
 #include <iostream>
 
@@ -18,11 +15,7 @@
 #include "timer.h"
 
 
-namespace am {
-
-namespace gen {
-
-namespace example {
+using namespace am::gen;
 
 
 //-------------------------------------------------------------------
@@ -110,15 +103,3 @@ void cached_2()
 	} while(i > 0 && j > 0);
 }
 
-
-
-
-
-}  // namespace example
-
-
-} //namespace gen
-} //namespace am
-
-
-#endif
