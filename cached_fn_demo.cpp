@@ -15,6 +15,7 @@
 #include "timer.h"
 
 
+using namespace am;
 using namespace am::gen;
 
 
