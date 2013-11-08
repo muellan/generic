@@ -1,14 +1,3 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
-
 #ifndef AM_GENERIC_INTEGER_SEQUENCE_H_
 #define AM_GENERIC_INTEGER_SEQUENCE_H_
 
@@ -20,11 +9,49 @@ namespace am {
 namespace gen {
 
 
+/*****************************************************************************
+ *
+ *
+ * HELPERS FOR CONSTEXPR INDEXING / UNPACKING
+ *
+ *
+ *****************************************************************************/
+
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
 template<int... ints>
 struct integer_sequence {};
+
+
+//-------------------------------------------------------------------
+template<class Ostream>
+inline
+Ostream&
+operator << (Ostream& os, integer_sequence<>)
+{
+	return os;
+}
+
+//---------------------------------------------------------
+template<class Ostream, int i>
+inline
+Ostream&
+operator << (Ostream& os, integer_sequence<i>)
+{
+	return (os << i);
+}
+
+//---------------------------------------------------------
+template<class Ostream, int i, int... is>
+inline
+Ostream&
+operator << (Ostream& os, integer_sequence<i,is...>)
+{
+	return (os << i <<' '<< integer_sequence<is...>());
+}
+
+
 
 
 
@@ -51,17 +78,36 @@ struct append_integer<integer_sequence<init...>,last>
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<int max, int offset = 0>
+template<int min, int max>
 struct make_ascending_integer_sequence
 {
     using type = typename append_integer<
-    	typename make_ascending_integer_sequence<offset+max-1>::type, offset+max-1>::type;
+    	typename make_ascending_integer_sequence<min,max-1>::type, max>::type;
 };
 //-----------------------------------------------------
-template<>
-struct make_ascending_integer_sequence<0>
+template<int min>
+struct make_ascending_integer_sequence<min,min>
 {
-	using type = integer_sequence<>;
+	using type = integer_sequence<min>;
+};
+
+
+
+
+//-------------------------------------------------------------------
+//
+//-------------------------------------------------------------------
+template<int max, int min = max>
+struct make_descending_integer_sequence
+{
+    using type = typename append_integer<
+    	typename make_descending_integer_sequence<max,min+1>::type, min>::type;
+};
+//-----------------------------------------------------
+template<int max>
+struct make_descending_integer_sequence<max,max>
+{
+	using type = integer_sequence<max>;
 };
 
 
@@ -135,14 +181,20 @@ using int_sequence_mask =
 	typename detail::make_integer_sequence_mask<pos,size,one,zero>::type;
 
 //-----------------------------------------------------
-template<int max, int offset = 0>
+template<int min, int max>
 using ascending_int_sequence =
-	typename detail::make_ascending_integer_sequence<max,offset>::type;
+	typename detail::make_ascending_integer_sequence<min,max>::type;
+
+//-----------------------------------------------------
+template<int max, int min>
+using descending_int_sequence =
+	typename detail::make_descending_integer_sequence<max,min>::type;
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
+
+}  // namespace am
 
 
 #endif

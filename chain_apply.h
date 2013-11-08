@@ -1,19 +1,8 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
 #ifndef AM_GENERIC_APPLY_CHAIN_H_
 #define AM_GENERIC_APPLY_CHAIN_H_
 
 
 #include <tuple>
-
 
 
 namespace am {
@@ -138,10 +127,9 @@ make_application_chain(Fns&&... fns)
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
 
-
+}  // namespace am
 
 
 

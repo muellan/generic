@@ -1,13 +1,3 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
 #ifndef AM_GENERIC_FACTORIES_H_
 #define AM_GENERIC_FACTORIES_H_
 
@@ -18,11 +8,18 @@
 #include "int_sequence.h"
 
 
-
-
 namespace am {
 
 namespace gen {
+
+
+/*****************************************************************************
+ *
+ *
+ *
+ *
+ *
+ *****************************************************************************/
 
 
 namespace detail {
@@ -63,7 +60,7 @@ inline constexpr Target
 make_uniform(Arg&& a)
 {
 	return detail::make_uniform__(static_cast<Target*>(nullptr),
-		std::forward<Arg>(a), ascending_int_sequence<n>{});
+		std::forward<Arg>(a), ascending_int_sequence<0,n-1>{});
 }
 
 
@@ -119,7 +116,7 @@ inline constexpr Target
 make_generate(Generator&& g)
 {
 	return detail::make_generate__(static_cast<Target*>(nullptr),
-		std::forward<Generator>(g), ascending_int_sequence<n>{});
+		std::forward<Generator>(g), ascending_int_sequence<0,n-1>{});
 }
 
 
@@ -172,14 +169,13 @@ inline constexpr Target
 make_copy_elems(const Source& src)
 {
 	return detail::make_copy_elems__(static_cast<Target*>(nullptr),
-		src, ascending_int_sequence<n>{});
+		src, ascending_int_sequence<0,n-1>{});
 }
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
 
-
+}  // namespace am
 
 
 #endif

@@ -1,19 +1,7 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
 #ifndef AM_GENERIC_MAP_TRAIT_H_
 #define AM_GENERIC_MAP_TRAIT_H_
 
 #include <type_traits>
-
-
 
 
 namespace am {
@@ -41,10 +29,9 @@ struct map_bool_trait<Trait,T> :
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
 
-
+}  // namespace am
 
 
 

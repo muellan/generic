@@ -1,15 +1,5 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
-#ifndef AM_GENERIC_TUPLE_UTIL_H_
-#define AM_GENERIC_TUPLE_UTIL_H_
+#ifndef AM_GENERIC_TUPLE_APPLY_H_
+#define AM_GENERIC_TUPLE_APPLY_H_
 
 #include <type_traits>
 #include <utility>
@@ -31,7 +21,7 @@ namespace detail {
  *
  *****************************************************************************/
 template<class F, class Tuple, int...ns>
-auto
+inline auto
 apply_helper(F&& f, Tuple&& t, integer_sequence<ns...>)
 	-> decltype(f(
 		std::forward<
@@ -55,26 +45,28 @@ apply_helper(F&& f, Tuple&& t, integer_sequence<ns...>)
  *
  *****************************************************************************/
 template<class F, class...T>
-auto
+inline auto
 apply(F&& f, std::tuple<T...>& t)
-	-> decltype(detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<sizeof...(T)>{}))
+	-> decltype(detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{}))
 {
-	return detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<sizeof...(T)>{});
+	return detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{});
 }
 
 //-----------------------------------------------------
 template<class F, class...T>
-auto
+inline auto
 apply(F&& f, const std::tuple<T...>& t)
-	-> decltype(detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<sizeof...(T)>{}))
+	-> decltype(detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{}))
 {
-	return detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<sizeof...(T)>{});
+	return detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{});
 }
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
+
+}  // namespace am
+
 
 
 #endif

@@ -1,13 +1,3 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
 #ifndef AM_GENERIC_TUPLE_HASH_H_
 #define AM_GENERIC_TUPLE_HASH_H_
 
@@ -78,7 +68,7 @@ struct tuple_hash
 	operator()(const argument_type& t) const
 	{
 		return make_hash(
-			t, ascending_int_sequence<std::tuple_size<argument_type>::value>());
+			t, ascending_int_sequence<0,std::tuple_size<argument_type>::value-1>());
 	}
 
 private:
@@ -95,9 +85,9 @@ private:
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
 
+}  // namespace am
 
 
 #endif

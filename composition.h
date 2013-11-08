@@ -1,20 +1,8 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
 #ifndef AM_GENERIC_FUNCTOR_COMPOSITION_H_
 #define AM_GENERIC_FUNCTOR_COMPOSITION_H_
 
 
 #include <tuple>
-
-
 
 
 namespace am {
@@ -39,8 +27,7 @@ struct function_composition_call
 		-> decltype(std::get<n-1>(f)(
 			function_composition_call<n-1>::exec(f, std::forward<Args>(args)...)))
 	{
-		return std::get<n-1>(f)(
-			function_composition_call<n-1>::exec(f, std::forward<Args>(args)...));
+		return std::get<n-1>(f)(function_composition_call<n-1>::exec(f, std::forward<Args>(args)...));
 	}
 };
 
@@ -141,10 +128,9 @@ make_function_composition(Fns&&... fns)
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
 
-
+}  // namespace am
 
 
 

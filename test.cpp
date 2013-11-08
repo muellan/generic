@@ -11,11 +11,9 @@
 #ifndef AM_GENERIC_TESTS_H_
 #define AM_GENERIC_TESTS_H_
 
-//#define AM_USE_TESTS
-#ifdef AM_USE_TESTS
 
 #include "chain_apply.h"
-#include "compositions.h"
+#include "composition.h"
 #include "factories.h"
 #include "int_sequence.h"
 #include "map_trait.h"
@@ -23,6 +21,7 @@
 #include "timer.h"
 #include "tuple_apply.h"
 #include "tuple_hash.h"
+#include "tuple_map.h"
 
 
 //-------------------------------------------------------------------
@@ -33,7 +32,5 @@ int main()
 	return 0;
 }
 
-
-#endif
 
 #endif

@@ -1,22 +1,16 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
 #include <cstdint>
 #include <iostream>
 
-#include "cached_fn.h"
 #include "timer.h"
 
+#include "cached_fn.h"
 
-using namespace am;
-using namespace am::gen;
+
+namespace am {
+
+namespace gen {
+
+namespace demo {
 
 
 //-------------------------------------------------------------------
@@ -37,7 +31,7 @@ struct my_ftor {
 
 
 //-------------------------------------------------------------------
-void cached_1()
+void using_cached_fn_1()
 {
 
 	//make new cached_functions with signature double(int,float)
@@ -75,7 +69,7 @@ void cached_1()
 
 
 //-------------------------------------------------------------------
-void cached_2()
+void using_cached_fn_2()
 {
 	auto m = cached_function<double(int,int)>(
 		[](int a, int b) -> double {
@@ -104,3 +98,10 @@ void cached_2()
 	} while(i > 0 && j > 0);
 }
 
+
+
+}  // namespace demo
+
+}  // namespace gen
+
+}  // namespace am

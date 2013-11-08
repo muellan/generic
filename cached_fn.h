@@ -1,15 +1,5 @@
-/*****************************************************************************
- *
- * AM generic facilities
- *
- * released under MIT license
- *
- * 2008-2013 André Müller
- *
- *****************************************************************************/
-
-#ifndef AM_GENERIC_CACHED_FUNCTION_H_
-#define AM_GENERIC_CACHED_FUNCTION_H_
+#ifndef AM_GENERIC_MEMOIZING_FUNCTION_H_
+#define AM_GENERIC_MEMOIZING_FUNCTION_H_
 
 #include <type_traits>
 #include <functional>
@@ -127,8 +117,8 @@ private:
 
 
 
-} //namespace gen
-} //namespace am
+}  // namespace gen
 
+}  // namespace am
 
 #endif
