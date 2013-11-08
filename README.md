@@ -67,26 +67,26 @@ Functions
 </p>
   
 
-- apply(functor, tuple<arguments...>)</br>
+- apply(functor, tuple&ltarguments...&gt)</br>
 <p>
   explodes tuple arguments into function arguments
 </p>
   
 
-- map(functor, tuple<arguments...>)</br>
+- map(functor, tuple&ltarguments...&gt)</br>
 <p>
   applies a functor to each argument and returns a tuple of results
 </p>
   
 
-- map(tuple<functor...>, arguments...)</br>
+- map(tuple&ltfunctor...&gt, arguments...)</br>
 <p>
   applies each functor from the tuple to all arguments
   and returns a tuple of results
 </p>
   
 
-- scan(tuple<functor...>, arguments...)</br>
+- scan(tuple&ltfunctor...&gt, arguments...)</br>
 <p>
   applies each functor from the tuple to all arguments in turn
   returns void
