@@ -15,7 +15,7 @@ Classes
   
 - integer_sequence</br>
 <p>
-  static integer sequence needed for variadic initialization
+  static integer sequence needed for variadic initialization/'exploding' 
   something similar (and most likely better engineered) will be in the C++14
   standard library
 </p> 
@@ -33,8 +33,8 @@ Classes
 Type Traits
 - map_bool_trait</br>
 <p>
-  maps a type traits modeled on std::integral_constant<bool,...> to
-  a variadic type sequence "variadic AND of type trait application" 
+  maps a type trait modeled on std::integral_constant<bool,.> to
+  a variadic type sequence "variadic 'AND' type trait mapping" 
 </p>
 
 
@@ -67,9 +67,29 @@ Functions
 </p>
   
 
-- apply(function/functor/lambda, tuple of arguments)</br>
+- apply(functor, tuple<arguments...>)</br>
 <p>
   explodes tuple arguments into function arguments
+</p>
+  
+
+- map(functor, tuple<arguments...>)</br>
+<p>
+  applies functor to each argument and returns a tuple of results
+</p>
+  
+
+- map(tuple<functor...>, arguments...)</br>
+<p>
+  applies each functor from the tuple to all arguments
+  and returns a tuple of results
+</p>
+  
+
+- scan(tuple<functor...>, arguments...)</br>
+<p>
+  applies each functor from the tuple to all arguments in turn
+  returns void
 </p>
 
 
