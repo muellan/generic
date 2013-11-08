@@ -79,17 +79,15 @@ Functions
 </p>
   
 
-- map(tuple&lt;functor...&gt;, arguments...)</br>
+- map(tuple&lt;functors...&gt;, arguments...)</br>
 <p>
-  applies each functor from the tuple to all arguments
-  and returns a tuple of results
+  applies each functor to all arguments and returns a tuple of results
 </p>
   
 
-- scan(tuple&lt;functor...&gt;, arguments...)</br>
+- scan(tuple&lt;functors...&gt;, arguments...)</br>
 <p>
-  applies each functor from the tuple to all arguments in turn
-  returns void
+  applies each functor to all arguments in turn; returns void
 </p>
 
 
