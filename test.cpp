@@ -23,11 +23,18 @@
 #include "tuple_hash.h"
 #include "tuple_map.h"
 
+#include "cached_fn_demo.h"
+#include "tuple_map_demo.h"
+
+using namespace am::gen;
 
 //-------------------------------------------------------------------
 int main()
 {
-
+//	demo::using_cached_fn_1();
+//	demo::using_cached_fn_2();
+//	demo::using_tuple_map();
+//	demo::using_tuple_scan();
 
 	return 0;
 }

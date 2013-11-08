@@ -8,8 +8,9 @@
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_CACHED_FUNCTION_DEMO_H_
-#define AM_GENERIC_CACHED_FUNCTION_DEMO_H_
+#ifndef AM_TUPLE_MAP_DEMO_H_
+#define AM_TUPLE_MAP_DEMO_H_
+
 
 namespace am {
 
@@ -18,8 +19,8 @@ namespace gen {
 namespace demo {
 
 
-void using_cached_fn_1();
-void using_cached_fn_2();
+void using_tuple_map();
+void using_tuple_scan();
 
 
 }  // namespace demo
@@ -27,6 +28,7 @@ void using_cached_fn_2();
 }  // namespace gen
 
 }  // namespace am
+
 
 
 #endif

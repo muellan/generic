@@ -1,3 +1,13 @@
+/*****************************************************************************
+ *
+ * AM utilities
+ *
+ * released under MIT license
+ *
+ * 2008-2013 André Müller
+ *
+ *****************************************************************************/
+
 #ifndef AM_GENERIC_MEMOIZING_FUNCTION_H_
 #define AM_GENERIC_MEMOIZING_FUNCTION_H_
 
