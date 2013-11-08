@@ -8,6 +8,8 @@
  *
  *****************************************************************************/
 
+#ifdef AM_USE_DEMOS
+
 #include <iostream>
 
 #include "tuple_map.h"
@@ -68,6 +70,16 @@ void using_tuple_map()
 void using_tuple_scan()
 {
 
+	scan(fv2{}, std::make_tuple(1,2,3.0));
+
+	int i = 1;
+
+	scan(
+		[&i](double x){std::cout << (i*x) << ' '; i *= 2; } ,
+		std::make_tuple(1,2,3,4));
+
+	std::cout << std::endl;
+
 	scan(std::tuple<fv1,fv2>{}, 1);
 }
 
@@ -78,3 +90,5 @@ void using_tuple_scan()
 }  // namespace gen
 
 }  // namespace am
+
+#endif

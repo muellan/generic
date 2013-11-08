@@ -11,6 +11,8 @@
 #ifndef AM_TUPLE_MAP_DEMO_H_
 #define AM_TUPLE_MAP_DEMO_H_
 
+#ifdef AM_USE_DEMOS
+
 
 namespace am {
 
@@ -30,5 +32,7 @@ void using_tuple_scan();
 }  // namespace am
 
 
+
+#endif
 
 #endif

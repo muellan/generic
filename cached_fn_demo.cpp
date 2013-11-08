@@ -8,6 +8,8 @@
  *
  *****************************************************************************/
 
+#ifdef AM_USE_DEMOS
+
 #include <cstdint>
 #include <iostream>
 
@@ -115,3 +117,5 @@ void using_cached_fn_2()
 }  // namespace gen
 
 }  // namespace am
+
+#endif

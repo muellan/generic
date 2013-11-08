@@ -11,6 +11,8 @@
 #ifndef AM_GENERIC_TESTS_H_
 #define AM_GENERIC_TESTS_H_
 
+//#define AM_USE_TESTS
+//#define AM_USE_DEMOS
 
 #include "chain_apply.h"
 #include "composition.h"
@@ -27,6 +29,7 @@
 #include "tuple_map_demo.h"
 
 using namespace am::gen;
+
 
 //-------------------------------------------------------------------
 int main()

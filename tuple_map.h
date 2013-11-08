@@ -27,7 +27,7 @@ namespace detail {
 
 /*****************************************************************************
  *
- * @brief helps to map a function onto tuple elements
+ * @brief helps to map a function to tuple elements
  *
  *****************************************************************************/
 template<class F, class Tuple, int...ns>
@@ -45,7 +45,7 @@ map_helper(F&& f, const Tuple& xs, integer_sequence<ns...>)
 
 /*****************************************************************************
  *
- * @brief helps to map a tuple of functions onto some arguments
+ * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
 template<class Tuple, int... ns, class... Args>
@@ -65,21 +65,43 @@ mapfs_helper(Tuple&& fs, integer_sequence<ns...>, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief helps to map a tuple of functions onto some arguments
+ * @brief helps to map a tuple of functions to some arguments
+ *
+ *****************************************************************************/
+template<class F, class Tuple, int...ns>
+inline void
+scan_helper(F&&, const Tuple&, integer_sequence<ns...>)
+{}
+
+//-----------------------------------------------------
+template<class F, class Tuple, int n, int...ns>
+inline void
+scan_helper(F&& f, const Tuple& xs, integer_sequence<n,ns...>)
+{
+	f(std::get<n>(xs));
+	scan_helper(std::forward<F>(f), xs, integer_sequence<ns...>{});
+}
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
 template<class Tuple, class... Args>
 inline void
-scan_helper(Tuple&&, integer_sequence<>, Args&&...)
+scanfs_helper(Tuple&&, integer_sequence<>, Args&&...)
 {}
 
 //-----------------------------------------------------
 template<class Tuple, int n, int... ns, class... Args>
 inline void
-scan_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
+scanfs_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
 {
 	std::get<n>(fs)(args...);
-	scan_helper(fs, integer_sequence<ns...>{}, std::forward<Args>(args)...);
+	scanfs_helper(fs, integer_sequence<ns...>{}, std::forward<Args>(args)...);
 }
 
 
@@ -90,7 +112,7 @@ scan_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief  maps a function onto a tuple of arguments
+ * @brief  maps a function to a tuple of arguments
  * @return a tuple of results
  *
  *****************************************************************************/
@@ -109,7 +131,7 @@ map(F&& f, const std::tuple<T...>& xs)
 
 /*****************************************************************************
  *
- * @brief  maps a tuple of functions onto a series of arguments
+ * @brief  maps a tuple of functions to a series of arguments
  * @return a tuple of results
  *
  *****************************************************************************/
@@ -143,7 +165,24 @@ map(const std::tuple<Fs...>& fs, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief maps a tuple of functions onto a series of arguments
+ * @brief  maps a function to a tuple of arguments
+ * @return void
+ *
+ *****************************************************************************/
+template<class F, class...T>
+inline void
+scan(F&& f, const std::tuple<T...>& xs)
+{
+	detail::scan_helper(
+		std::forward<F>(f), xs, ascending_int_sequence<0,sizeof...(T)-1>{});
+}
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief maps a tuple of functions to a series of arguments
  * @return void
  *
  *****************************************************************************/
@@ -151,7 +190,7 @@ template<class... Fs, class...Args>
 inline void
 scan(std::tuple<Fs...>& fs, Args&&... args)
 {
-	detail::scan_helper(fs,
+	detail::scanfs_helper(fs,
 		ascending_int_sequence<0,sizeof...(Fs)-1>{},
 		std::forward<Args>(args)...);
 }
@@ -161,7 +200,7 @@ template<class... Fs, class...Args>
 inline void
 scan(const std::tuple<Fs...>& fs, Args&&... args)
 {
-	detail::scan_helper(fs,
+	detail::scanfs_helper(fs,
 		ascending_int_sequence<0,sizeof...(Fs)-1>{},
 		std::forward<Args>(args)...);
 }
