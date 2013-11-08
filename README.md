@@ -85,9 +85,15 @@ Functions
 </p>
   
 
+- scan(functor, tuple&lt;arguments...&gt;)</br>
+<p>
+  applies a (void-returning) functor to each argument; returns void
+</p>
+  
+
 - scan(tuple&lt;functors...&gt;, arguments...)</br>
 <p>
-  applies each functor to all arguments in turn; returns void
+  applies each (void-returning) functor to all arguments in turn; returns void
 </p>
 
 
