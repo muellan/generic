@@ -95,10 +95,10 @@ Requirements
 ------------
  - variadic templates
  - template aliases
- - tuple
- - array
- - unordered_map
- - chrono
- - type_traits
+ - std::tuple
+ - std::array
+ - std::unordered_map
+ - &lt;chrono&gt;
+ - &lt;type_traits&gt;
 
 tested with g++ 4.7.2
