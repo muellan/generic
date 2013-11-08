@@ -75,7 +75,7 @@ Functions
 
 - map(functor, tuple<arguments...>)</br>
 <p>
-  applies functor to each argument and returns a tuple of results
+  applies a functor to each argument and returns a tuple of results
 </p>
   
 
