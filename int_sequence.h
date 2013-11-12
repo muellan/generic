@@ -88,15 +88,21 @@ struct append_integer<integer_sequence<init...>,last>
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<int min, int max>
+template<int min, int max, bool empty = (min > max)>
 struct make_ascending_integer_sequence
 {
     using type = typename append_integer<
     	typename make_ascending_integer_sequence<min,max-1>::type, max>::type;
 };
 //-----------------------------------------------------
+template<int min, int max>
+struct make_ascending_integer_sequence<min,max,true>
+{
+    using type = integer_sequence<>;
+};
+//-----------------------------------------------------
 template<int min>
-struct make_ascending_integer_sequence<min,min>
+struct make_ascending_integer_sequence<min,min,false>
 {
 	using type = integer_sequence<min>;
 };
@@ -107,15 +113,21 @@ struct make_ascending_integer_sequence<min,min>
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<int max, int min = max>
+template<int max, int min, bool empty = (min > max)>
 struct make_descending_integer_sequence
 {
     using type = typename append_integer<
     	typename make_descending_integer_sequence<max,min+1>::type, min>::type;
 };
 //-----------------------------------------------------
+template<int min, int max>
+struct make_descending_integer_sequence<min,max,true>
+{
+    using type = integer_sequence<>;
+};
+//-----------------------------------------------------
 template<int max>
-struct make_descending_integer_sequence<max,max>
+struct make_descending_integer_sequence<max,max,false>
 {
 	using type = integer_sequence<max>;
 };
@@ -208,3 +220,4 @@ using descending_int_sequence =
 
 
 #endif
+

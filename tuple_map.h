@@ -68,9 +68,9 @@ mapfs_helper(Tuple&& fs, integer_sequence<ns...>, Args&&... args)
  * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
-template<class F, class Tuple, int...ns>
+template<class F, class Tuple>
 inline void
-scan_helper(F&&, Tuple&&, integer_sequence<ns...>)
+scan_helper(F&&, Tuple&&, integer_sequence<>)
 {}
 
 //-----------------------------------------------------
@@ -117,6 +117,14 @@ scanfs_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
  * @return a tuple of results
  *
  *****************************************************************************/
+template<class F>
+inline std::tuple<>
+map(F&&, std::tuple<>)
+{
+	return std::tuple<>();
+}
+
+//-----------------------------------------------------
 template<class F, class...T>
 inline auto
 map(F&& f, const std::tuple<T...>& xs)
@@ -136,6 +144,14 @@ map(F&& f, const std::tuple<T...>& xs)
  * @return a tuple of results
  *
  *****************************************************************************/
+template<class... Args>
+inline std::tuple<>
+map(std::tuple<>, Args&&...)
+{
+	return std::tuple<>();
+}
+
+//-----------------------------------------------------
 template<class... Fs, class... Args>
 inline auto
 map(std::tuple<Fs...>& fs, Args&&... args)
@@ -170,6 +186,12 @@ map(const std::tuple<Fs...>& fs, Args&&... args)
  * @return void
  *
  *****************************************************************************/
+template<class F>
+inline void
+scan(F&&, std::tuple<>)
+{}
+
+//---------------------------------------------------------
 template<class F, class...T>
 inline void
 scan(F&& f, std::tuple<T...>& xs)
@@ -196,6 +218,12 @@ scan(F&& f, const std::tuple<T...>& xs)
  * @return void
  *
  *****************************************************************************/
+template< class...Args>
+inline void
+scan(std::tuple<>, Args&&...)
+{}
+
+//-----------------------------------------------------
 template<class... Fs, class...Args>
 inline void
 scan(std::tuple<Fs...>& fs, Args&&... args)
@@ -220,7 +248,6 @@ scan(const std::tuple<Fs...>& fs, Args&&... args)
 }  // namespace gen
 
 }  // namespace am
-
 
 
 #endif
