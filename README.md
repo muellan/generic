@@ -76,12 +76,24 @@ Functions
 - map(functor, tuple&lt;arguments...&gt;)</br>
 <p>
   applies a functor to each argument and returns a tuple of results
+  
+  map(f, {x1,x2,...,xn}) -> {f(x1),f(x2),...,f(xn)}
 </p>
   
 
 - map(tuple&lt;functors...&gt;, arguments...)</br>
 <p>
   applies each functor to all arguments and returns a tuple of results
+  
+  zip_map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
+</p>
+  
+
+- zip_map(tuple&lt;functors...&gt;, tuple&lt;arguments...&gt;)</br>
+<p>
+  applies functors to arguments 1-by-1 and returns a tuple of results
+  
+  zip_map({f1,f2,...,fn}, {x1,x2,...,xn}) -> {f1(x1),f2(x2),...,fn(xn)}
 </p>
   
 
