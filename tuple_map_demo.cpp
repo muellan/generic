@@ -54,14 +54,37 @@ struct fv2 {
 //-------------------------------------------------------------------
 void using_tuple_map()
 {
-	using std::get;
+	{
+		auto xs = std::tuple<int,int,double>{1,1,1.0};
+		auto fcxs = map(fc{}, xs);
+		std::cout
+			<< std::get<0>(fcxs) <<' '
+			<< std::get<1>(fcxs) <<' '
+			<< std::get<2>(fcxs) << std::endl;
+	}
 
-	auto xs = std::tuple<int,int,double>{1,1,1.0};
-	auto fcxs = map(fc{}, xs);
-	std::cout << get<0>(fcxs) <<' '<< get<1>(fcxs) <<' '<< get<2>(fcxs) << std::endl;
+	{
+		auto fsx = map(std::tuple<fa,fb,fc>{}, 1);
+		std::cout
+			<< std::get<0>(fsx) <<' '
+			<< std::get<1>(fsx) <<' '
+			<< std::get<2>(fsx) << std::endl;
+	}
 
-	auto fsx = map(std::tuple<fa,fb,fc>{}, 1);
-	std::cout << get<0>(fsx) <<' '<< get<1>(fsx) <<' '<< get<2>(fsx) << std::endl;
+	{
+		auto fs = std::make_tuple(
+			[](int i){return 2*i; },
+			[](int i){return 4*i; },
+			[](int i){return 8*i; });
+
+		auto xs = std::make_tuple(1,2,3);
+		auto fsxs = gen::zip_map(fs,xs);
+
+		std::cout
+			<< std::get<0>(fsxs) <<' '
+			<< std::get<1>(fsxs) <<' '
+			<< std::get<2>(fsxs) << std::endl;
+	}
 }
 
 

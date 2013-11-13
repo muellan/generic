@@ -33,11 +33,9 @@ namespace detail {
 template<class F, class Tuple, int...ns>
 inline auto
 map_helper(F&& f, const Tuple& xs, integer_sequence<ns...>)
-	-> std::tuple<typename std::decay<decltype(f(std::get<ns>(xs)))>::type...>
+	-> decltype(std::make_tuple(f(std::get<ns>(xs))...))
 {
-	return std::tuple<
-		typename std::decay<decltype(f(std::get<ns>(xs)))>::type...>
-			{f(std::get<ns>(xs))...};
+	return std::make_tuple(f(std::get<ns>(xs))...);
 }
 
 
@@ -51,14 +49,27 @@ map_helper(F&& f, const Tuple& xs, integer_sequence<ns...>)
 template<class Tuple, int... ns, class... Args>
 inline auto
 mapfs_helper(Tuple&& fs, integer_sequence<ns...>, Args&&... args)
-	-> 	std::tuple<typename std::decay<decltype(
-			std::get<ns>(fs)(args...))
-		>::type...>
+	-> decltype(std::make_tuple(std::get<ns>(fs)(args...)...))
 {
-	return std::tuple<
-		typename std::decay<decltype(std::get<ns>(fs)(args...))>::type...>
-			{std::get<ns>(fs)(args...)...};
+	return std::make_tuple(std::get<ns>(fs)(args...)...);
 }
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief helps to map a tuple of functions to some arguments
+ *
+ *****************************************************************************/
+template<class Ftuple, class Xtuple, int... ns>
+inline auto
+zip_map_helper(Ftuple&& fs, Xtuple&& xs, integer_sequence<ns...>)
+	-> 	decltype(std::make_tuple(std::get<ns>(fs)(std::get<ns>(xs))...))
+{
+	return std::make_tuple(std::get<ns>(fs)(std::get<ns>(xs))...);
+}
+
 
 
 
@@ -111,6 +122,8 @@ scanfs_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
 
 
 
+
+
 /*****************************************************************************
  *
  * @brief  maps a function to a tuple of arguments
@@ -134,6 +147,8 @@ map(F&& f, const std::tuple<T...>& xs)
 	return detail::map_helper(
 		std::forward<F>(f), xs, ascending_int_sequence<0,sizeof...(T)-1>{});
 }
+
+
 
 
 
@@ -180,6 +195,76 @@ map(const std::tuple<Fs...>& fs, Args&&... args)
 
 
 
+
+
+/*****************************************************************************
+ *
+ * @brief  maps a tuple of functions to a tuple of arguments 1 by 1
+ * @return a tuple of results
+ *
+ *****************************************************************************/
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline auto
+zip_map(std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
+	-> decltype(detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{}))
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	return detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline auto
+zip_map(const std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
+	-> decltype(detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{}))
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	return detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline auto
+zip_map(std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
+	-> decltype(detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{}))
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	return detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline auto
+zip_map(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
+	-> decltype(detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{}))
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	return detail::zip_map_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+
+
+
+
+
 /*****************************************************************************
  *
  * @brief  maps a function to a tuple of arguments
@@ -208,6 +293,8 @@ scan(F&& f, const std::tuple<T...>& xs)
 	detail::scan_helper(
 		std::forward<F>(f), xs, ascending_int_sequence<0,sizeof...(T)-1>{});
 }
+
+
 
 
 
@@ -250,4 +337,6 @@ scan(const std::tuple<Fs...>& fs, Args&&... args)
 }  // namespace am
 
 
+
 #endif
+
