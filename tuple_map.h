@@ -126,7 +126,9 @@ scanfs_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief  maps a function to a tuple of arguments
+ * @brief map(f, {x1,x2,...,xn}) -> {f(x1),f(x2),...,f(xn)}
+ *        maps a function to a tuple of arguments
+ *
  * @return a tuple of results
  *
  *****************************************************************************/
@@ -155,7 +157,9 @@ map(F&& f, const std::tuple<T...>& xs)
 
 /*****************************************************************************
  *
- * @brief  maps a tuple of functions to a series of arguments
+ * @brief map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
+ *        maps a tuple of functions to a series of arguments
+ *
  * @return a tuple of results
  *
  *****************************************************************************/
@@ -199,7 +203,9 @@ map(const std::tuple<Fs...>& fs, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief  maps a tuple of functions to a tuple of arguments 1 by 1
+ * @brief zip_map({f1,f2,...,fn}, {x1,x2,...,xn}) -> {f1(x1),f2(x2),...,fn(xn)}
+ *        maps a tuple of functions to a tuple of arguments 1 by 1
+ *
  * @return a tuple of results
  *
  *****************************************************************************/
