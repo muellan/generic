@@ -40,7 +40,7 @@ Type Traits
 
 Functions
 ---------
-- function_composition<br/>
+- make_function_composition<br/>
 <p>
   composes multiple functors into one
 </p>
