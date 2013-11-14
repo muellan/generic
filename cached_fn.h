@@ -39,11 +39,11 @@ class cached_function; //not available
 template<class Ret, class... Args>
 class cached_function<Ret(Args...)>
 {
-	using arg_t = std::tuple<typename std::decay<Args>::type...>;
+	using arg__ = std::tuple<typename std::decay<Args>::type...>;
 
-	using functor_t = std::function<Ret(Args...)>;
+	using functor__ = std::function<Ret(Args...)>;
 
-	using hasher_t = tuple_hash<typename std::decay<Args>::type...>;
+	using hasher__ = tuple_hash<typename std::decay<Args>::type...>;
 
 public:
 	//---------------------------------------------------------------
@@ -53,8 +53,8 @@ public:
 	//---------------------------------------------------------------
 	///@brief construct with function object
 	explicit
-	cached_function(const functor_t& fn):
-		fn_(fn), mem_()
+	cached_function(const functor__& fn):
+		fn_(fn), mutables_(), mem_()
 	{}
 
 	//-----------------------------------------------------
@@ -64,7 +64,7 @@ public:
 	//-----------------------------------------------------
 	///@brief move constructor
 	cached_function(cached_function&& src):
-		fn_(std::move(src.fn_)), mem_(std::move(src.mem_))
+		fn_(std::move(src.fn_)), mutables_(), mem_(std::move(src.mem_))
 	{}
 
 
@@ -87,7 +87,7 @@ public:
 	//---------------------------------------------------------------
 	///@brief resets functor member and clears cache
 	cached_function&
-	operator = (const functor_t& fn)
+	operator = (const functor__& fn)
 	{
 		fn_ = fn;
 		mem_.clear();
@@ -101,7 +101,7 @@ public:
 	operator() (const Args&... args) const  //logically const
 	{
 		//pack arguments into tuple
-		auto arg = arg_t{args...};
+		auto arg = arg__{args...};
 
 		auto lock = std::unique_lock<std::mutex>{mutables_};
 
@@ -117,12 +117,12 @@ public:
 
 
 private:
-	functor_t fn_;
+	functor__ fn_;
 
 	//note: mutable preserves the const-ness of operator() which
 	//one would expected from a normal function call
 	mutable std::mutex mutables_;
-	mutable std::unordered_map<arg_t,result_type,hasher_t> mem_;
+	mutable std::unordered_map<arg__,result_type,hasher__> mem_;
 };
 
 
