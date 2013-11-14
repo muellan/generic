@@ -14,11 +14,78 @@
 #include <array>
 #include <cstddef>
 #include <utility>
+#include <memory>
+
 
 #include "int_sequence.h"
 
 
 namespace am {
+
+
+/*****************************************************************************
+ *
+ * @brief make_unique from N3656 by Stephan T. Lavavej <stl@microsoft.com>
+ *        make_unique will be in C++14
+ *
+ * @details make_unique<T>(args...)
+ *          make_unique<T[]>(n)
+ *          make_unique<T[N]>(args...) = delete
+ *
+ *****************************************************************************/
+
+//-------------------------------------------------------------------
+namespace detail {
+
+template<class T>
+struct _Unique_if
+{
+	using _Single_object = std::unique_ptr<T>;
+};
+
+template<class T>
+struct _Unique_if<T[]>
+{
+	using _Unknown_bound = std::unique_ptr<T[]>;
+};
+
+template<class T, size_t N>
+struct _Unique_if<T[N]>
+{
+	using _Known_bound = void;
+};
+
+}  // namespace detail
+
+
+//-------------------------------------------------------------------
+template<class T, class... Args>
+typename detail::_Unique_if<T>::_Single_object
+make_unique(Args&&... args)
+{
+	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
+//---------------------------------------------------------
+template<class T>
+typename detail::_Unique_if<T>::_Unknown_bound
+make_unique(size_t n)
+{
+	using U__ = typename std::remove_extent<T>::type;
+	return std::unique_ptr<T>(new U__[n]());
+}
+
+//---------------------------------------------------------
+template<class T, class... Args>
+typename detail::_Unique_if<T>::_Known_bound
+make_unique(Args&&...) = delete;
+
+
+
+
+
+
+
 
 namespace gen {
 
