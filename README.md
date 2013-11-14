@@ -113,7 +113,7 @@ Functions
 </p>
   
   
-- zip_scan(tuple&lt;functors...&gt;, arguments...)<br/>
+- zip_scan(tuple&lt;functors...&gt;, tuple&lt;arguments...&gt;)<br/>
 <p>
   applies each functor to each argument 1-by-1<br/>
   discards the results and returns void<br/>
