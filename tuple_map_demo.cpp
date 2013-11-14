@@ -93,17 +93,34 @@ void using_tuple_map()
 void using_tuple_scan()
 {
 
-	scan(fv2{}, std::make_tuple(1,2,3.0));
+	{
+		scan(fv2{}, std::make_tuple(1,2,3.0));
+	}
 
-	int i = 1;
+	{
+		int i = 1;
 
-	scan(
-		[&i](double x){std::cout << (i*x) << ' '; i *= 2; } ,
-		std::make_tuple(1,2,3,4));
+		scan(
+			[&i](double x){std::cout << (i*x) << ' '; i *= 2; } ,
+			std::make_tuple(1,2,3,4));
 
-	std::cout << std::endl;
+		std::cout << std::endl;
+	}
 
-	scan(std::tuple<fv1,fv2>{}, 1);
+	{
+		scan(std::tuple<fv1,fv2>{}, 1);
+	}
+
+	{
+		auto fs = std::make_tuple(
+			[](int i){std::cout << 2*i << std::endl; },
+			[](int i){std::cout << 4*i << std::endl; },
+			[](int i){std::cout << 8*i << std::endl; });
+
+		auto xs = std::make_tuple(1,2,3);
+
+		gen::zip_scan(fs,xs);
+	}
 }
 
 

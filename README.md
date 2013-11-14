@@ -75,34 +75,49 @@ Functions
 
 - map(functor, tuple&lt;arguments...&gt;)<br/>
 <p>
-  applies a functor to each argument and returns a tuple of results:<br/>
+  applies a functor to each argument of a tuple of arguments<br/>
+  returns a tuple of results<br/>
   map(f, {x1,x2,...,xn}) -> {f(x1),f(x2),...,f(xn)}
 </p>
   
 
 - map(tuple&lt;functors...&gt;, arguments...)<br/>
 <p>
-  applies each functor to all arguments and returns a tuple of results:<br/>
+  applies each functor in a tuple to a series arguments<br/>
+  returns a tuple of results<br/>
   map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
 </p>
   
 
 - zip_map(tuple&lt;functors...&gt;, tuple&lt;arguments...&gt;)<br/>
 <p>
-  applies functors to arguments 1-by-1 and returns a tuple of results:<br/>
+  applies each functor to each argument 1-by-1<br/>
+  returns a tuple of results<br/>
   zip_map({f1,f2,...,fn}, {x1,x2,...,xn}) -> {f1(x1),f2(x2),...,fn(xn)}
 </p>
   
 
 - scan(functor, tuple&lt;arguments...&gt;)<br/>
 <p>
-  applies a (void-returning) functor to each argument; returns void
+  applies a functor to each argument in a tuple of arguments<br/>
+  discards the results and returns void<br/>
+  scan(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
 </p>
   
 
 - scan(tuple&lt;functors...&gt;, arguments...)<br/>
 <p>
-  applies each (void-returning) functor to all arguments in turn; returns void
+  applies each functor to all arguments in turn<br/>
+  discards the results and returns void<br/>
+  scan({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
+</p>
+  
+  
+- zip_scan(tuple&lt;functors...&gt;, arguments...)<br/>
+<p>
+  applies each functor to each argument 1-by-1<br/>
+  discards the results and returns void<br/>
+  zip_scan({f1,f2,...,fn}, {x1,x2,...,xn}) {f1(x1); f2(x2); ...; fn(xn);}
 </p>
 
 

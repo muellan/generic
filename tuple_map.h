@@ -27,7 +27,6 @@ namespace detail {
 
 /*****************************************************************************
  *
- * @brief helps to map a function to tuple elements
  *
  *****************************************************************************/
 template<class F, class Tuple, int...ns>
@@ -43,7 +42,6 @@ map_helper(F&& f, const Tuple& xs, integer_sequence<ns...>)
 
 /*****************************************************************************
  *
- * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
 template<class Tuple, int... ns, class... Args>
@@ -59,7 +57,6 @@ mapfs_helper(Tuple&& fs, integer_sequence<ns...>, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
 template<class Ftuple, class Xtuple, int... ns>
@@ -76,7 +73,6 @@ zip_map_helper(Ftuple&& fs, Xtuple&& xs, integer_sequence<ns...>)
 
 /*****************************************************************************
  *
- * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
 template<class F, class Tuple>
@@ -99,7 +95,6 @@ scan_helper(F&& f, Tuple&& xs, integer_sequence<n,ns...>)
 
 /*****************************************************************************
  *
- * @brief helps to map a tuple of functions to some arguments
  *
  *****************************************************************************/
 template<class Tuple, class... Args>
@@ -113,7 +108,33 @@ inline void
 scanfs_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
 {
 	std::get<n>(fs)(args...);
-	scanfs_helper(fs, integer_sequence<ns...>{}, std::forward<Args>(args)...);
+	scanfs_helper(
+		std::forward<Tuple>(fs), integer_sequence<ns...>{},
+		std::forward<Args>(args)...);
+}
+
+
+
+
+/*****************************************************************************
+ *
+ *
+ *****************************************************************************/
+template<class Ftuple, class Xtuple>
+inline void
+zip_scan_helper(Ftuple&&, Xtuple&&, integer_sequence<>)
+{}
+
+//---------------------------------------------------------
+template<class Ftuple, class Xtuple, int n, int... ns>
+inline void
+zip_scan_helper(Ftuple&& fs, Xtuple&& xs, integer_sequence<n,ns...>)
+{
+	std::get<n>(fs)(std::get<n>(xs));
+
+	zip_scan_helper(
+		std::forward<Ftuple>(fs),
+		std::forward<Xtuple>(xs), integer_sequence<ns...>{});
 }
 
 
@@ -127,7 +148,7 @@ scanfs_helper(Tuple&& fs, integer_sequence<n,ns...>, Args&&... args)
 /*****************************************************************************
  *
  * @brief map(f, {x1,x2,...,xn}) -> {f(x1),f(x2),...,f(xn)}
- *        maps a function to a tuple of arguments
+ *        applies a functor to each argument of a tuple of arguments
  *
  * @return a tuple of results
  *
@@ -158,7 +179,7 @@ map(F&& f, const std::tuple<T...>& xs)
 /*****************************************************************************
  *
  * @brief map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
- *        maps a tuple of functions to a series of arguments
+ *        applies each functor in a tuple to a series arguments
  *
  * @return a tuple of results
  *
@@ -204,7 +225,7 @@ map(const std::tuple<Fs...>& fs, Args&&... args)
 /*****************************************************************************
  *
  * @brief zip_map({f1,f2,...,fn}, {x1,x2,...,xn}) -> {f1(x1),f2(x2),...,fn(xn)}
- *        maps a tuple of functions to a tuple of arguments 1 by 1
+ *        applies each functor to each argument 1-by-1
  *
  * @return a tuple of results
  *
@@ -273,7 +294,10 @@ zip_map(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 
 /*****************************************************************************
  *
- * @brief  maps a function to a tuple of arguments
+ * @brief scan(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
+ *        applies a functor to each argument in a tuple of arguments and
+ *        discards the results
+ *
  * @return void
  *
  *****************************************************************************/
@@ -307,7 +331,10 @@ scan(F&& f, const std::tuple<T...>& xs)
 
 /*****************************************************************************
  *
- * @brief maps a tuple of functions to a series of arguments
+ * @brief scan({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
+ *        applies each functor in a tuple to a series arguments and
+ *        discards the results
+ *
  * @return void
  *
  *****************************************************************************/
@@ -334,6 +361,69 @@ scan(const std::tuple<Fs...>& fs, Args&&... args)
 	detail::scanfs_helper(fs,
 		ascending_int_sequence<0,sizeof...(Fs)-1>{},
 		std::forward<Args>(args)...);
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief zip_scan({f1,f2,...,fn}, {x1,x2,...,xn})
+ *        applies each functor to each argument 1-by-1 and
+ *        discards the results
+ *
+ * @return void
+ *
+ *****************************************************************************/
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline void
+zip_scan(std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	detail::zip_scan_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline void
+zip_scan(const std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	detail::zip_scan_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline void
+zip_scan(std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	detail::zip_scan_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
+}
+
+//---------------------------------------------------------------
+template<class... Fs, class... Xs>
+inline void
+zip_scan(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
+{
+	static_assert(sizeof...(Fs) == sizeof...(Xs),
+		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+
+	detail::zip_scan_helper(fs, xs,
+		ascending_int_sequence<0,sizeof...(Fs)-1>{});
 }
 
 
