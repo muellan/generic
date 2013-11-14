@@ -89,8 +89,8 @@ public:
 	cached_function&
 	operator = (const functor__& fn)
 	{
-		fn_ = fn;
 		mem_.clear();
+		fn_ = fn;
 		return *this;
 	}
 
