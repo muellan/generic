@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2013 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -30,9 +30,9 @@ namespace detail {
  * @brief helper function exploding the tuple arguments into a function call
  *
  *****************************************************************************/
-template<class F, class Tuple, int...ns>
+template<class F, class Tuple, std::size_t...ns>
 inline auto
-apply_helper(F&& f, Tuple&& t, integer_sequence<ns...>)
+apply_helper(F&& f, Tuple&& t, index_sequence<ns...>)
 	-> decltype(f(
 		std::forward<
 			typename std::tuple_element<ns,typename std::decay<Tuple>::type>::type
@@ -57,18 +57,18 @@ apply_helper(F&& f, Tuple&& t, integer_sequence<ns...>)
 template<class F, class...T>
 inline auto
 apply(F&& f, std::tuple<T...>& t)
-	-> decltype(detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{}))
+	-> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
 {
-	return detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{});
+	return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
 }
 
 //-----------------------------------------------------
 template<class F, class...T>
 inline auto
 apply(F&& f, const std::tuple<T...>& t)
-	-> decltype(detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{}))
+	-> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
 {
-	return detail::apply_helper(std::forward<F>(f),t,ascending_int_sequence<0,sizeof...(T)-1>{});
+	return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
 }
 
 

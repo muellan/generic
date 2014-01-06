@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2013 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -76,6 +76,7 @@ void using_cached_fn_1()
 	auto m4 = cached_function<int(int)>([](int x) {return x*x;});
 	std::cout << m4(5) << std::endl;
 	std::cout << m4(5) << std::endl;
+
 }
 
 

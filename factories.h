@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2013 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -15,7 +15,6 @@
 #include <cstddef>
 #include <utility>
 #include <memory>
-
 
 #include "int_sequence.h"
 
@@ -110,18 +109,18 @@ T&& constant(T&& t, int) {
 
 //---------------------------------------------------------
 /// @brief general case
-template<class Target, class Arg, int... ints>
+template<class Target, class Arg, std::size_t... ints>
 inline constexpr Target
-make_uniform__(Target*, Arg&& a, integer_sequence<ints...>)
+make_uniform__(Target*, Arg&& a, index_sequence<ints...>)
 {
 	return Target{constant(std::forward<Arg>(a),ints)...};
 }
 
 //---------------------------------------------------------
 /// @brief specialization for std::array
-template<class T, std::size_t n, class Arg, int... ints>
+template<class T, std::size_t n, class Arg, std::size_t... ints>
 inline constexpr std::array<T,n>
-make_uniform__(std::array<T,n>*, Arg&& a, integer_sequence<ints...>)
+make_uniform__(std::array<T,n>*, Arg&& a, index_sequence<ints...>)
 {
 	return std::array<T,n>{{constant(std::forward<Arg>(a),ints)...}};
 }
@@ -137,7 +136,7 @@ inline constexpr Target
 make_uniform(Arg&& a)
 {
 	return detail::make_uniform__(static_cast<Target*>(nullptr),
-		std::forward<Arg>(a), ascending_int_sequence<0,n-1>{});
+		std::forward<Arg>(a), make_index_sequence<n>{});
 }
 
 
@@ -165,9 +164,9 @@ make_generate_call__(Generator&& g, int) -> decltype(g())
 
 //---------------------------------------------------------
 /// @brief general case
-template<class Target, class Generator, int... ints>
+template<class Target, class Generator, std::size_t... ints>
 inline constexpr Target
-make_generate__(Target*, Generator&& g, integer_sequence<ints...>)
+make_generate__(Target*, Generator&& g, index_sequence<ints...>)
 {
 	return Target{
 		make_generate_call__(std::forward<Generator>(g),ints)...};
@@ -175,9 +174,9 @@ make_generate__(Target*, Generator&& g, integer_sequence<ints...>)
 
 //---------------------------------------------------------
 /// @brief specialization for std::array
-template<class T, std::size_t n, class Generator, int... ints>
+template<class T, std::size_t n, class Generator, std::size_t... ints>
 inline constexpr std::array<T,n>
-make_generate__(std::array<T,n>*, Generator&& g, integer_sequence<ints...>)
+make_generate__(std::array<T,n>*, Generator&& g, index_sequence<ints...>)
 {
 	return std::array<T,n>{
 		{make_generate_call__(std::forward<Generator>(g),ints)...} };
@@ -193,7 +192,7 @@ inline constexpr Target
 make_generate(Generator&& g)
 {
 	return detail::make_generate__(static_cast<Target*>(nullptr),
-		std::forward<Generator>(g), ascending_int_sequence<0,n-1>{});
+		std::forward<Generator>(g), make_index_sequence<n>{});
 }
 
 
@@ -213,23 +212,23 @@ namespace detail {
 
 
 //-------------------------------------------------------------------
-template<class Target, class Source, int... ints>
+template<class Target, class Source, std::size_t... ints>
 inline constexpr Target
-make_copy_elems__(
+make_copy__(
 	Target*,
 	const Source& source,
-	gen::integer_sequence<ints...>)
+	gen::index_sequence<ints...>)
 {
 	return Target{source[ints]...};
 }
 
 //---------------------------------------------------------
-template<std::size_t n, class T, class Source, int... ints>
+template<std::size_t n, class T, class Source, std::size_t... ints>
 inline constexpr std::array<T,n>
-make_copy_elems__(
+make_copy__(
 	std::array<T,n>*,
 	const Source& source,
-	gen::integer_sequence<ints...>)
+	gen::index_sequence<ints...>)
 {
 	return std::array<T,n>{{source[ints]...}};
 }
@@ -240,13 +239,16 @@ make_copy_elems__(
 
 //-----------------------------------------------------
 /// @brief calls multi-param ctor of 'Target' with n times 'a'
-template<class Target, class Source,
-	std::size_t n = std::tuple_size<Target>::value, class Generator>
+template<
+	class Target,
+	std::size_t n = std::tuple_size<Target>::value,
+	class Source
+>
 inline constexpr Target
-make_copy_elems(const Source& src)
+make_copy(const Source& src)
 {
-	return detail::make_copy_elems__(static_cast<Target*>(nullptr),
-		src, ascending_int_sequence<0,n-1>{});
+	return detail::make_copy__(static_cast<Target*>(nullptr),
+		src, make_index_sequence<n>{});
 }
 
 

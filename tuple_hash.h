@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2013 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -78,13 +78,13 @@ struct tuple_hash
 	operator()(const argument_type& t) const
 	{
 		return make_hash(
-			t, ascending_int_sequence<0,std::tuple_size<argument_type>::value-1>());
+			t, make_index_sequence<std::tuple_size<argument_type>::value>());
 	}
 
 private:
-	template<int...idx>
+	template<std::size_t...idx>
 	static result_type
-	make_hash(const argument_type& t, integer_sequence<idx...>)
+	make_hash(const argument_type& t, index_sequence<idx...>)
 	{
 		using std::get;
 		return detail::combine_hashes<result_type,T...>::get(get<idx>(t)...);

@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2013 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -125,6 +125,58 @@ private:
 	mutable std::unordered_map<arg__,result_type,hasher__> mem_;
 };
 
+
+
+
+
+
+/*****************************************************************************
+ *
+ *
+ *
+ *
+ *****************************************************************************/
+/*
+namespace detail {
+
+
+template<class T>
+struct make_cached__
+{
+	using type = typename make_cached__<decltype(&T::operator())>::type;
+};
+
+template<class F, class T, class... Xs>
+struct make_cached__<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)>
+{
+    using type = cached_function<F(Xs...)>;
+};
+
+template<class F, class T, class... Xs>
+struct make_cached__<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)const>
+{
+    using type = cached_function<F(Xs...)>;
+};
+
+template<class F, class... Xs>
+struct make_cached__<std::function<F(Xs...)> (*)(std::function<F(Xs...)>)>
+{
+    using type = cached_function<F(Xs...)>;
+};
+
+
+}  // namespace detail
+
+
+
+//-------------------------------------------------------------------
+template<class T>
+typename detail::make_cached__<T>::type
+make_cached(T f)
+{
+    return typename detail::make_cached__<T>::type(f);
+}
+*/
 
 
 }  // namespace gen

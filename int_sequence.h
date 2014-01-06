@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2013 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -22,43 +22,53 @@ namespace gen {
 /*****************************************************************************
  *
  *
- * HELPERS FOR CONSTEXPR INDEXING / UNPACKING
+ * @brief integer sequence
  *
  *
  *****************************************************************************/
+template<class Int, Int... ints>
+struct integer_sequence
+{
+	using value_type = Int;
+
+	static constexpr
+	std::size_t size() noexcept {
+		return sizeof...(ints);
+	}
+
+};
+
 
 //-------------------------------------------------------------------
-//
-//-------------------------------------------------------------------
-template<int... ints>
-struct integer_sequence {};
+template<std::size_t... indices>
+using index_sequence = integer_sequence<std::size_t,indices...>;
 
 
 //-------------------------------------------------------------------
-template<class Ostream>
+template<class Ostream, class Int>
 inline
 Ostream&
-operator << (Ostream& os, integer_sequence<>)
+operator << (Ostream& os, integer_sequence<Int>)
 {
 	return os;
 }
 
 //---------------------------------------------------------
-template<class Ostream, int i>
+template<class Ostream, class Int, Int i>
 inline
 Ostream&
-operator << (Ostream& os, integer_sequence<i>)
+operator << (Ostream& os, integer_sequence<Int,i>)
 {
 	return (os << i);
 }
 
 //---------------------------------------------------------
-template<class Ostream, int i, int... is>
+template<class Ostream, class Int, Int i, Int... is>
 inline
 Ostream&
-operator << (Ostream& os, integer_sequence<i,is...>)
+operator << (Ostream& os, integer_sequence<Int,i,is...>)
 {
-	return (os << i <<' '<< integer_sequence<is...>());
+	return (os << i <<' '<< integer_sequence<Int,is...>());
 }
 
 
@@ -72,14 +82,55 @@ namespace detail {
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<class IntegerSequence, int right>
-struct append_integer;
+template<class IntegerSequence, typename IntegerSequence::value_type right>
+struct integer_appender;
 
-//-----------------------------------------------------
-template<int... init, int last>
-struct append_integer<integer_sequence<init...>,last>
+//---------------------------------------------------------
+template<class Int, Int... init, Int last>
+struct integer_appender<integer_sequence<Int,init...>,last>
 {
-	using type = integer_sequence<init...,last>;
+	using type = integer_sequence<Int,init...,last>;
+};
+
+
+} //namespace detail
+
+
+
+
+//---------------------------------------------------------
+template<class IntegerSequence, typename IntegerSequence::value_type right>
+using append_integer =
+	typename detail::integer_appender<IntegerSequence,right>::type;
+
+
+
+
+
+
+namespace detail {
+
+
+//-------------------------------------------------------------------
+//
+//-------------------------------------------------------------------
+template<class Int, Int min, Int max, bool empty = (min > max)>
+struct ascending_integer_sequence_maker
+{
+    using type = append_integer<
+    	typename ascending_integer_sequence_maker<Int,min,max-1>::type, max>;
+};
+//-----------------------------------------------------
+template<class Int, Int min, Int max>
+struct ascending_integer_sequence_maker<Int,min,max,true>
+{
+    using type = integer_sequence<Int>;
+};
+//-----------------------------------------------------
+template<class Int, Int min>
+struct ascending_integer_sequence_maker<Int,min,min,false>
+{
+	using type = integer_sequence<Int,min>;
 };
 
 
@@ -88,23 +139,23 @@ struct append_integer<integer_sequence<init...>,last>
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<int min, int max, bool empty = (min > max)>
-struct make_ascending_integer_sequence
+template<class Int, Int max, Int min, bool empty = (min > max)>
+struct descending_integer_sequence_maker
 {
-    using type = typename append_integer<
-    	typename make_ascending_integer_sequence<min,max-1>::type, max>::type;
+    using type = append_integer<
+    	typename descending_integer_sequence_maker<Int,max,min+1>::type, min>;
 };
 //-----------------------------------------------------
-template<int min, int max>
-struct make_ascending_integer_sequence<min,max,true>
+template<class Int, Int min, Int max>
+struct descending_integer_sequence_maker<Int,min,max,true>
 {
-    using type = integer_sequence<>;
+    using type = integer_sequence<Int>;
 };
 //-----------------------------------------------------
-template<int min>
-struct make_ascending_integer_sequence<min,min,false>
+template<class Int, Int max>
+struct descending_integer_sequence_maker<Int,max,max,false>
 {
-	using type = integer_sequence<min>;
+	using type = integer_sequence<Int,max>;
 };
 
 
@@ -113,23 +164,17 @@ struct make_ascending_integer_sequence<min,min,false>
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<int max, int min, bool empty = (min > max)>
-struct make_descending_integer_sequence
+template<class Int, std::size_t size, Int value>
+struct uniform_integer_sequence_maker
 {
-    using type = typename append_integer<
-    	typename make_descending_integer_sequence<max,min+1>::type, min>::type;
+	using type = append_integer<
+			typename uniform_integer_sequence_maker<Int,size-1,value>::type,value>;
 };
 //-----------------------------------------------------
-template<int min, int max>
-struct make_descending_integer_sequence<min,max,true>
+template<class Int, Int value>
+struct uniform_integer_sequence_maker<Int,0,value>
 {
-    using type = integer_sequence<>;
-};
-//-----------------------------------------------------
-template<int max>
-struct make_descending_integer_sequence<max,max,false>
-{
-	using type = integer_sequence<max>;
+	using type = integer_sequence<Int>;
 };
 
 
@@ -138,44 +183,31 @@ struct make_descending_integer_sequence<max,max,false>
 //-------------------------------------------------------------------
 //
 //-------------------------------------------------------------------
-template<int size, int value>
-struct make_uniform_sequence
+template<
+	class Int,
+	std::size_t pos,
+	std::size_t size = pos,
+	int one = 1,
+	int zero = 0
+>
+struct integer_sequence_mask_maker
 {
-	using type = typename append_integer<
-			typename make_uniform_sequence<size-1,value>::type,value>::type;
-};
-//-----------------------------------------------------
-template<int value>
-struct make_uniform_sequence<0,value>
-{
-	using type = integer_sequence<>;
-};
-
-
-
-
-//-------------------------------------------------------------------
-//
-//-------------------------------------------------------------------
-template<int pos, int size = pos, int one = 1, int zero = 0>
-struct make_integer_sequence_mask
-{
-	using type = typename append_integer<
-			typename make_integer_sequence_mask<pos,size-1,one,zero>::type,
+	using type = append_integer<
+			typename integer_sequence_mask_maker<Int,pos,size-1,one,zero>::type,
 			(((size-1) == pos) ? one : zero)
-		>::type;
+		>;
 };
 //-----------------------------------------------------
-template<int pos, int one, int zero>
-struct make_integer_sequence_mask<pos,1,one,zero>
+template<class Int, std::size_t pos, int one, int zero>
+struct integer_sequence_mask_maker<Int,pos,1,one,zero>
 {
-	using type = integer_sequence<((pos == 0) ? one : zero)>;
+	using type = integer_sequence<Int,((pos == 0) ? one : zero)>;
 };
 //-----------------------------------------------------
-template<int pos, int one, int zero>
-struct make_integer_sequence_mask<pos,0,one,zero>
+template<class Int, std::size_t pos, int one, int zero>
+struct integer_sequence_mask_maker<Int,pos,0,one,zero>
 {
-	using type = integer_sequence<>;
+	using type = integer_sequence<Int>;
 };
 
 
@@ -190,28 +222,49 @@ struct make_integer_sequence_mask<pos,0,one,zero>
  *
  *
  *
+ *
  *****************************************************************************/
 
-//-----------------------------------------------------
-template<int size, int value>
-using uniform_int_sequence =
-	typename detail::make_uniform_sequence<size,value>::type;
+
+//-------------------------------------------------------------------
+// similar to upcoming standard
+//-------------------------------------------------------------------
+template<class Int, Int maxExcl>
+using make_integer_sequence =
+	typename detail::ascending_integer_sequence_maker<Int,0,maxExcl-1>::type;
+
+//---------------------------------------------------------
+template<std::size_t maxExcl>
+using make_index_sequence =
+	typename detail::ascending_integer_sequence_maker<
+		std::size_t,0,maxExcl-1>::type;
+
+
+
+//-------------------------------------------------------------------
+// custom
+//-------------------------------------------------------------------
+template<class Int, Int min, Int max>
+using make_ascending_integer_sequence =
+	typename detail::ascending_integer_sequence_maker<Int,min,max>::type;
 
 //-----------------------------------------------------
-template<int pos, int size = pos, int one = 1, int zero = 0>
-using int_sequence_mask =
-	typename detail::make_integer_sequence_mask<pos,size,one,zero>::type;
+template<class Int, Int max, Int min>
+using make_descending_integer_sequence =
+	typename detail::descending_integer_sequence_maker<Int,max,min>::type;
 
 //-----------------------------------------------------
-template<int min, int max>
-using ascending_int_sequence =
-	typename detail::make_ascending_integer_sequence<min,max>::type;
+template<class Int, std::size_t size, Int value>
+using make_uniform_integer_sequence =
+	typename detail::uniform_integer_sequence_maker<Int,size,value>::type;
 
 //-----------------------------------------------------
-template<int max, int min>
-using descending_int_sequence =
-	typename detail::make_descending_integer_sequence<max,min>::type;
-
+template<
+	class Int, std::size_t pos, std::size_t size = pos,
+	int one = 1, int zero = 0
+>
+using make_integer_sequence_mask =
+	typename detail::integer_sequence_mask_maker<Int,pos,size,one,zero>::type;
 
 
 }  // namespace gen
@@ -220,4 +273,3 @@ using descending_int_sequence =
 
 
 #endif
-
