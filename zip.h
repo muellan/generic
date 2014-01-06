@@ -11,9 +11,6 @@
 #ifndef AM_GENERIC_ZIP_H_
 #define AM_GENERIC_ZIP_H_
 
-#include <type_traits>
-#include <utility>
-
 
 namespace am {
 
