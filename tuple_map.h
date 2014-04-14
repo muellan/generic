@@ -32,9 +32,9 @@ namespace detail {
 template<class F, class Tuple, std::size_t... ns>
 inline auto
 map_helper(F&& f, const Tuple& xs, index_sequence<ns...>)
-	-> decltype(std::make_tuple(f(std::get<ns>(xs))...))
+    -> decltype(std::make_tuple(f(std::get<ns>(xs))...))
 {
-	return std::make_tuple(f(std::get<ns>(xs))...);
+    return std::make_tuple(f(std::get<ns>(xs))...);
 }
 
 
@@ -47,9 +47,9 @@ map_helper(F&& f, const Tuple& xs, index_sequence<ns...>)
 template<class Tuple, std::size_t... ns, class... Args>
 inline auto
 mapfs_helper(Tuple&& fs, index_sequence<ns...>, Args&&... args)
-	-> decltype(std::make_tuple(std::get<ns>(fs)(args...)...))
+    -> decltype(std::make_tuple(std::get<ns>(fs)(args...)...))
 {
-	return std::make_tuple(std::get<ns>(fs)(args...)...);
+    return std::make_tuple(std::get<ns>(fs)(args...)...);
 }
 
 
@@ -62,9 +62,9 @@ mapfs_helper(Tuple&& fs, index_sequence<ns...>, Args&&... args)
 template<class Ftuple, class Xtuple, std::size_t... ns>
 inline auto
 zip_map_helper(Ftuple&& fs, Xtuple&& xs, index_sequence<ns...>)
-	-> 	decltype(std::make_tuple(std::get<ns>(fs)(std::get<ns>(xs))...))
+    ->     decltype(std::make_tuple(std::get<ns>(fs)(std::get<ns>(xs))...))
 {
-	return std::make_tuple(std::get<ns>(fs)(std::get<ns>(xs))...);
+    return std::make_tuple(std::get<ns>(fs)(std::get<ns>(xs))...);
 }
 
 
@@ -85,9 +85,9 @@ template<class F, class Tuple, std::size_t n, std::size_t... ns>
 inline void
 scan_helper(F&& f, Tuple&& xs, index_sequence<n,ns...>)
 {
-	f(std::get<n>(xs));
-	scan_helper(std::forward<F>(f),
-		std::forward<Tuple>(xs), index_sequence<ns...>{});
+    f(std::get<n>(xs));
+    scan_helper(std::forward<F>(f),
+        std::forward<Tuple>(xs), index_sequence<ns...>{});
 }
 
 
@@ -107,10 +107,10 @@ template<class Tuple, std::size_t n, std::size_t... ns, class... Args>
 inline void
 scanfs_helper(Tuple&& fs, index_sequence<n,ns...>, Args&&... args)
 {
-	std::get<n>(fs)(args...);
-	scanfs_helper(
-		std::forward<Tuple>(fs), index_sequence<ns...>{},
-		std::forward<Args>(args)...);
+    std::get<n>(fs)(args...);
+    scanfs_helper(
+        std::forward<Tuple>(fs), index_sequence<ns...>{},
+        std::forward<Args>(args)...);
 }
 
 
@@ -130,11 +130,11 @@ template<class Ftuple, class Xtuple, std::size_t n, std::size_t... ns>
 inline void
 zip_scan_helper(Ftuple&& fs, Xtuple&& xs, index_sequence<n,ns...>)
 {
-	std::get<n>(fs)(std::get<n>(xs));
+    std::get<n>(fs)(std::get<n>(xs));
 
-	zip_scan_helper(
-		std::forward<Ftuple>(fs),
-		std::forward<Xtuple>(xs), index_sequence<ns...>{});
+    zip_scan_helper(
+        std::forward<Ftuple>(fs),
+        std::forward<Xtuple>(xs), index_sequence<ns...>{});
 }
 
 
@@ -157,18 +157,18 @@ template<class F>
 inline std::tuple<>
 map(F&&, std::tuple<>)
 {
-	return std::tuple<>();
+    return std::tuple<>();
 }
 
 //-----------------------------------------------------
 template<class F, class...T>
 inline auto
 map(F&& f, const std::tuple<T...>& xs)
-	-> decltype(detail::map_helper(
-		std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{}))
+    -> decltype(detail::map_helper(
+        std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{}))
 {
-	return detail::map_helper(
-		std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
+    return detail::map_helper(
+        std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
 }
 
 
@@ -188,33 +188,33 @@ template<class... Args>
 inline std::tuple<>
 map(std::tuple<>, Args&&...)
 {
-	return std::tuple<>();
+    return std::tuple<>();
 }
 
 //-----------------------------------------------------
 template<class... Fs, class... Args>
 inline auto
 map(std::tuple<Fs...>& fs, Args&&... args)
-	-> decltype(detail::mapfs_helper(fs,
-		make_index_sequence<sizeof...(Fs)>{},
-		std::forward<Args>(args)...))
+    -> decltype(detail::mapfs_helper(fs,
+        make_index_sequence<sizeof...(Fs)>{},
+        std::forward<Args>(args)...))
 {
-	return detail::mapfs_helper(fs,
-		make_index_sequence<sizeof...(Fs)>{},
-		std::forward<Args>(args)...);
+    return detail::mapfs_helper(fs,
+        make_index_sequence<sizeof...(Fs)>{},
+        std::forward<Args>(args)...);
 }
 
 //-----------------------------------------------------
 template<class... Fs, class... Args>
 inline auto
 map(const std::tuple<Fs...>& fs, Args&&... args)
-	-> decltype(detail::mapfs_helper(fs,
-		make_index_sequence<sizeof...(Fs)>{},
-		std::forward<Args>(args)...))
+    -> decltype(detail::mapfs_helper(fs,
+        make_index_sequence<sizeof...(Fs)>{},
+        std::forward<Args>(args)...))
 {
-	return detail::mapfs_helper(fs,
-		make_index_sequence<sizeof...(Fs)>{},
-		std::forward<Args>(args)...);
+    return detail::mapfs_helper(fs,
+        make_index_sequence<sizeof...(Fs)>{},
+        std::forward<Args>(args)...);
 }
 
 
@@ -235,56 +235,56 @@ map(const std::tuple<Fs...>& fs, Args&&... args)
 template<class... Fs, class... Xs>
 inline auto
 zip_map(std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
-	-> decltype(detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{}))
+    -> decltype(detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{}))
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	return detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    return detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline auto
 zip_map(const std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
-	-> decltype(detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{}))
+    -> decltype(detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{}))
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	return detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    return detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline auto
 zip_map(std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
-	-> decltype(detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{}))
+    -> decltype(detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{}))
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	return detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    return detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline auto
 zip_map(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
-	-> decltype(detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{}))
+    -> decltype(detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{}))
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	return detail::zip_map_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    return detail::zip_map_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 
@@ -311,8 +311,8 @@ template<class F, class...T>
 inline void
 scan(F&& f, std::tuple<T...>& xs)
 {
-	detail::scan_helper(
-		std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
+    detail::scan_helper(
+        std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
 }
 
 //---------------------------------------------------------
@@ -320,8 +320,8 @@ template<class F, class...T>
 inline void
 scan(F&& f, const std::tuple<T...>& xs)
 {
-	detail::scan_helper(
-		std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
+    detail::scan_helper(
+        std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
 }
 
 
@@ -348,9 +348,9 @@ template<class... Fs, class...Args>
 inline void
 scan(std::tuple<Fs...>& fs, Args&&... args)
 {
-	detail::scanfs_helper(fs,
-		make_index_sequence<sizeof...(Fs)>{},
-		std::forward<Args>(args)...);
+    detail::scanfs_helper(fs,
+        make_index_sequence<sizeof...(Fs)>{},
+        std::forward<Args>(args)...);
 }
 
 //-----------------------------------------------------
@@ -358,9 +358,9 @@ template<class... Fs, class...Args>
 inline void
 scan(const std::tuple<Fs...>& fs, Args&&... args)
 {
-	detail::scanfs_helper(fs,
-		make_index_sequence<sizeof...(Fs)>{},
-		std::forward<Args>(args)...);
+    detail::scanfs_helper(fs,
+        make_index_sequence<sizeof...(Fs)>{},
+        std::forward<Args>(args)...);
 }
 
 
@@ -383,11 +383,11 @@ template<class... Fs, class... Xs>
 inline void
 zip_scan(std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	detail::zip_scan_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    detail::zip_scan_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
@@ -395,11 +395,11 @@ template<class... Fs, class... Xs>
 inline void
 zip_scan(const std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	detail::zip_scan_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    detail::zip_scan_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
@@ -407,11 +407,11 @@ template<class... Fs, class... Xs>
 inline void
 zip_scan(std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	detail::zip_scan_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    detail::zip_scan_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
@@ -419,11 +419,11 @@ template<class... Fs, class... Xs>
 inline void
 zip_scan(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 {
-	static_assert(sizeof...(Fs) == sizeof...(Xs),
-		"zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
+    static_assert(sizeof...(Fs) == sizeof...(Xs),
+        "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-	detail::zip_scan_helper(fs, xs,
-		make_index_sequence<sizeof...(Fs)>{});
+    detail::zip_scan_helper(fs, xs,
+        make_index_sequence<sizeof...(Fs)>{});
 }
 
 

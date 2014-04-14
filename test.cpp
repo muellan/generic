@@ -34,12 +34,12 @@ using namespace am::gen;
 //-------------------------------------------------------------------
 int main()
 {
-//	demo::using_cached_fn_1();
-//	demo::using_cached_fn_2();
-//	demo::using_tuple_map();
-//	demo::using_tuple_scan();
+//    demo::using_cached_fn_1();
+//    demo::using_cached_fn_2();
+//    demo::using_tuple_map();
+//    demo::using_tuple_scan();
 
-	return 0;
+    return 0;
 }
 
 

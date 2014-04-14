@@ -33,15 +33,15 @@ namespace detail {
 template<class F, class Tuple, std::size_t...ns>
 inline auto
 apply_helper(F&& f, Tuple&& t, index_sequence<ns...>)
-	-> decltype(f(
-		std::forward<
-			typename std::tuple_element<ns,typename std::decay<Tuple>::type>::type
-		>(std::get<ns>(t)) ... ) )
+    -> decltype(f(
+        std::forward<
+            typename std::tuple_element<ns,typename std::decay<Tuple>::type>::type
+        >(std::get<ns>(t)) ... ) )
 {
-	return f(
-			std::forward<
-			typename std::tuple_element<ns,typename std::decay<Tuple>::type>::type
-		>(std::get<ns>(t)) ... );
+    return f(
+            std::forward<
+            typename std::tuple_element<ns,typename std::decay<Tuple>::type>::type
+        >(std::get<ns>(t)) ... );
 }
 
 
@@ -57,18 +57,18 @@ apply_helper(F&& f, Tuple&& t, index_sequence<ns...>)
 template<class F, class...T>
 inline auto
 apply(F&& f, std::tuple<T...>& t)
-	-> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
+    -> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
 {
-	return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
+    return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
 }
 
 //-----------------------------------------------------
 template<class F, class...T>
 inline auto
 apply(F&& f, const std::tuple<T...>& t)
-	-> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
+    -> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
 {
-	return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
+    return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
 }
 
 

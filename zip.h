@@ -29,11 +29,11 @@ namespace gen {
 template<class InputIterator1, class InputIterator2, class OutputIterator>
 inline void
 zip(InputIterator1 beg1, InputIterator1 end1,
-	InputIterator2 beg2, InputIterator2 end2, OutputIterator out)
+    InputIterator2 beg2, InputIterator2 end2, OutputIterator out)
 {
-	for(; (beg1 != end1) && (beg2 != end2); ++beg1, ++beg2) {
-		*out++ = {*beg1,*beg2};
-	}
+    for(; (beg1 != end1) && (beg2 != end2); ++beg1, ++beg2) {
+        *out++ = {*beg1,*beg2};
+    }
 }
 
 

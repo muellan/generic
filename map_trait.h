@@ -15,7 +15,6 @@
 
 
 namespace am {
-
 namespace gen {
 
 
@@ -27,20 +26,42 @@ namespace gen {
  *****************************************************************************/
 template<template<class> class Trait, class H, class... T>
 struct map_bool_trait :
-	public std::integral_constant<bool,
-		Trait<H>::value && map_bool_trait<Trait,T...>::value>
+    public std::integral_constant<bool,
+        Trait<H>::value && map_bool_trait<Trait,T...>::value>
 {};
 
 //-------------------------------------------------------------------
 template<template<class> class Trait, class T>
 struct map_bool_trait<Trait,T> :
-	public std::integral_constant<bool,Trait<T>::value>
+    public std::integral_constant<bool,Trait<T>::value>
+{};
+
+
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief
+ *
+ *
+ *****************************************************************************/
+template<class Type, class H, class... T>
+struct are_all_same :
+    public std::integral_constant<bool,
+        std::is_same<Type,H>::value && are_all_same<Type,T...>::value>
+{};
+
+//-------------------------------------------------------------------
+template<class Type, class T>
+struct are_all_same<Type,T> :
+    public std::integral_constant<bool,std::is_same<Type,T>::value>
 {};
 
 
 
 }  // namespace gen
-
 }  // namespace am
 
 

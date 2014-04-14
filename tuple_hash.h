@@ -31,24 +31,24 @@ namespace detail {
 template<class ResultT, class T, class... Ts>
 struct combine_hashes
 {
-	static ResultT
-	get(const T& t , const Ts&... ts) {
-		return (
-			ResultT(std::hash<T>()(t))
-			xor
-			combine_hashes<ResultT,Ts...>::get(ts...)
-		);
-	}
+    static ResultT
+    get(const T& t , const Ts&... ts) {
+        return (
+            ResultT(std::hash<T>()(t))
+            xor
+            combine_hashes<ResultT,Ts...>::get(ts...)
+        );
+    }
 };
 
 //-------------------------------------------------------------------
 template<class ResultT, class T>
 struct combine_hashes<ResultT,T>
 {
-	static ResultT
-	get(const T& t) {
-		return ResultT(std::hash<T>()(t));
-	}
+    static ResultT
+    get(const T& t) {
+        return ResultT(std::hash<T>()(t));
+    }
 };
 
 
@@ -67,28 +67,28 @@ struct combine_hashes<ResultT,T>
  *
  *****************************************************************************/
 template<
-	class... T
+    class... T
 >
 struct tuple_hash
 {
-	using argument_type = std::tuple<T...>;
-	using result_type = std::uint_least64_t;
+    using argument_type = std::tuple<T...>;
+    using result_type = std::uint_least64_t;
 
-	result_type
-	operator()(const argument_type& t) const
-	{
-		return make_hash(
-			t, make_index_sequence<std::tuple_size<argument_type>::value>());
-	}
+    result_type
+    operator()(const argument_type& t) const
+    {
+        return make_hash(
+            t, make_index_sequence<std::tuple_size<argument_type>::value>());
+    }
 
 private:
-	template<std::size_t...idx>
-	static result_type
-	make_hash(const argument_type& t, index_sequence<idx...>)
-	{
-		using std::get;
-		return detail::combine_hashes<result_type,T...>::get(get<idx>(t)...);
-	}
+    template<std::size_t...idx>
+    static result_type
+    make_hash(const argument_type& t, index_sequence<idx...>)
+    {
+        using std::get;
+        return detail::combine_hashes<result_type,T...>::get(get<idx>(t)...);
+    }
 
 };
 
