@@ -97,27 +97,27 @@ Functions
 </p>
   
 
-- scan(functor, tuple&lt;arguments...&gt;)<br/>
+- act(functor, tuple&lt;arguments...&gt;)<br/>
 <p>
   applies a functor to each argument in a tuple of arguments<br/>
   discards the results and returns void<br/>
-  scan(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
+  act(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
 </p>
   
 
-- scan(tuple&lt;functors...&gt;, arguments...)<br/>
+- act(tuple&lt;functors...&gt;, arguments...)<br/>
 <p>
   applies each functor to all arguments in turn<br/>
   discards the results and returns void<br/>
-  scan({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
+  act({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
 </p>
   
   
-- zip_scan(tuple&lt;functors...&gt;, tuple&lt;arguments...&gt;)<br/>
+- zip_act(tuple&lt;functors...&gt;, tuple&lt;arguments...&gt;)<br/>
 <p>
   applies each functor to each argument 1-by-1<br/>
   discards the results and returns void<br/>
-  zip_scan({f1,f2,...,fn}, {x1,x2,...,xn}) {f1(x1); f2(x2); ...; fn(xn);}
+  zip_act({f1,f2,...,fn}, {x1,x2,...,xn}) {f1(x1); f2(x2); ...; fn(xn);}
 </p>
 
 
