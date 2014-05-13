@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -20,20 +20,31 @@ namespace gen {
 
 /*****************************************************************************
  *
- * @brief maps a boolean trait over a variadic type list
+ * @brief maps OR over a variadic list of boolean traits
  *
  *
  *****************************************************************************/
-template<template<class> class Trait, class H, class... T>
-struct map_bool_trait :
-    public std::integral_constant<bool,
-        Trait<H>::value && map_bool_trait<Trait,T...>::value>
+template<class...>
+struct any;
+
+template<>
+struct any<> :
+    public std::false_type
 {};
 
-//-------------------------------------------------------------------
-template<template<class> class Trait, class T>
-struct map_bool_trait<Trait,T> :
-    public std::integral_constant<bool,Trait<T>::value>
+template<class T1>
+struct any<T1> :
+    public T1
+{};
+
+template<class T1, class T2>
+struct any<T1,T2> :
+    public std::conditional<T1::value,T1,T2>::type
+{};
+
+template<class T1, class T2, class T3, class... Ts>
+struct any<T1,T2,T3,Ts...> :
+    public std::conditional<T1::value,T1, any<T2,T3,Ts...>>::type
 {};
 
 
@@ -43,22 +54,32 @@ struct map_bool_trait<Trait,T> :
 
 /*****************************************************************************
  *
- * @brief
+ * @brief maps AND over a variadic list of boolean traits
  *
  *
  *****************************************************************************/
-template<class Type, class H, class... T>
-struct are_all_same :
-    public std::integral_constant<bool,
-        std::is_same<Type,H>::value && are_all_same<Type,T...>::value>
+template<class...>
+struct all;
+
+template<>
+struct all<> :
+    public std::true_type
 {};
 
-//-------------------------------------------------------------------
-template<class Type, class T>
-struct are_all_same<Type,T> :
-    public std::integral_constant<bool,std::is_same<Type,T>::value>
+template<class T1>
+struct all<T1> :
+    public T1
 {};
 
+template<class T1, class T2>
+struct all<T1,T2> :
+    public std::conditional<T1::value,T2,T1>::type
+{};
+
+template<class T1, class T2, class T3, class... Ts>
+struct all<T1,T2,T3,Ts...> :
+    public std::conditional<T1::value, all<T2,T3,Ts...>,T1>::type
+{};
 
 
 }  // namespace gen

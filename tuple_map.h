@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -77,16 +77,16 @@ zip_map_helper(Ftuple&& fs, Xtuple&& xs, index_sequence<ns...>)
  *****************************************************************************/
 template<class F, class Tuple>
 inline void
-scan_helper(F&&, Tuple&&, index_sequence<>)
+act_helper(F&&, Tuple&&, index_sequence<>)
 {}
 
 //-----------------------------------------------------
 template<class F, class Tuple, std::size_t n, std::size_t... ns>
 inline void
-scan_helper(F&& f, Tuple&& xs, index_sequence<n,ns...>)
+act_helper(F&& f, Tuple&& xs, index_sequence<n,ns...>)
 {
     f(std::get<n>(xs));
-    scan_helper(std::forward<F>(f),
+    act_helper(std::forward<F>(f),
         std::forward<Tuple>(xs), index_sequence<ns...>{});
 }
 
@@ -99,16 +99,16 @@ scan_helper(F&& f, Tuple&& xs, index_sequence<n,ns...>)
  *****************************************************************************/
 template<class Tuple, class... Args>
 inline void
-scanfs_helper(Tuple&&, index_sequence<>, Args&&...)
+actfs_helper(Tuple&&, index_sequence<>, Args&&...)
 {}
 
 //-----------------------------------------------------
 template<class Tuple, std::size_t n, std::size_t... ns, class... Args>
 inline void
-scanfs_helper(Tuple&& fs, index_sequence<n,ns...>, Args&&... args)
+actfs_helper(Tuple&& fs, index_sequence<n,ns...>, Args&&... args)
 {
     std::get<n>(fs)(args...);
-    scanfs_helper(
+    actfs_helper(
         std::forward<Tuple>(fs), index_sequence<ns...>{},
         std::forward<Args>(args)...);
 }
@@ -120,19 +120,52 @@ scanfs_helper(Tuple&& fs, index_sequence<n,ns...>, Args&&... args)
  *
  *
  *****************************************************************************/
+template<std::size_t n>
+struct apply_at_helper
+{
+    template<class Fs, class... Args>
+    static void
+    apply(std::size_t index, Fs&& fs, Args&&... args) {
+
+        using std::get;
+        if(index == (n-1)) {
+            get<n-1>(fs)(std::forward<Args>(args)...);
+        } else {
+            apply_at_helper<n-1>::apply(index,
+                std::forward<Fs>(fs), std::forward<Args>(args)...);
+        }
+    }
+};
+
+//---------------------------------------------------------
+template<>
+struct apply_at_helper<0>
+{
+    template<class Fs, class... Args>
+    static void
+    apply(std::size_t, Fs&&, Args&&...) {}
+};
+
+
+
+
+/*****************************************************************************
+ *
+ *
+ *****************************************************************************/
 template<class Ftuple, class Xtuple>
 inline void
-zip_scan_helper(Ftuple&&, Xtuple&&, index_sequence<>)
+zip_act_helper(Ftuple&&, Xtuple&&, index_sequence<>)
 {}
 
 //---------------------------------------------------------
 template<class Ftuple, class Xtuple, std::size_t n, std::size_t... ns>
 inline void
-zip_scan_helper(Ftuple&& fs, Xtuple&& xs, index_sequence<n,ns...>)
+zip_act_helper(Ftuple&& fs, Xtuple&& xs, index_sequence<n,ns...>)
 {
     std::get<n>(fs)(std::get<n>(xs));
 
-    zip_scan_helper(
+    zip_act_helper(
         std::forward<Ftuple>(fs),
         std::forward<Xtuple>(xs), index_sequence<ns...>{});
 }
@@ -179,7 +212,7 @@ map(F&& f, const std::tuple<T...>& xs)
 /*****************************************************************************
  *
  * @brief map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
- *        applies each functor in a tuple to a series arguments
+ *        applies each functor in a tuple to a series of arguments
  *
  * @return a tuple of results
  *
@@ -294,7 +327,7 @@ zip_map(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 
 /*****************************************************************************
  *
- * @brief scan(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
+ * @brief act(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
  *        applies a functor to each argument in a tuple of arguments and
  *        discards the results
  *
@@ -303,24 +336,24 @@ zip_map(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
  *****************************************************************************/
 template<class F>
 inline void
-scan(F&&, std::tuple<>)
+act(F&&, std::tuple<>)
 {}
 
 //---------------------------------------------------------
 template<class F, class...T>
 inline void
-scan(F&& f, std::tuple<T...>& xs)
+act(F&& f, std::tuple<T...>& xs)
 {
-    detail::scan_helper(
+    detail::act_helper(
         std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
 }
 
 //---------------------------------------------------------
 template<class F, class...T>
 inline void
-scan(F&& f, const std::tuple<T...>& xs)
+act(F&& f, const std::tuple<T...>& xs)
 {
-    detail::scan_helper(
+    detail::act_helper(
         std::forward<F>(f), xs, make_index_sequence<sizeof...(T)>{});
 }
 
@@ -331,8 +364,8 @@ scan(F&& f, const std::tuple<T...>& xs)
 
 /*****************************************************************************
  *
- * @brief scan({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
- *        applies each functor in a tuple to a series arguments and
+ * @brief act({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
+ *        applies each functor in a tuple to a series of arguments and
  *        discards the results
  *
  * @return void
@@ -340,15 +373,15 @@ scan(F&& f, const std::tuple<T...>& xs)
  *****************************************************************************/
 template< class...Args>
 inline void
-scan(std::tuple<>, Args&&...)
+act(std::tuple<>, Args&&...)
 {}
 
 //-----------------------------------------------------
 template<class... Fs, class...Args>
 inline void
-scan(std::tuple<Fs...>& fs, Args&&... args)
+act(std::tuple<Fs...>& fs, Args&&... args)
 {
-    detail::scanfs_helper(fs,
+    detail::actfs_helper(fs,
         make_index_sequence<sizeof...(Fs)>{},
         std::forward<Args>(args)...);
 }
@@ -356,9 +389,9 @@ scan(std::tuple<Fs...>& fs, Args&&... args)
 //-----------------------------------------------------
 template<class... Fs, class...Args>
 inline void
-scan(const std::tuple<Fs...>& fs, Args&&... args)
+act(const std::tuple<Fs...>& fs, Args&&... args)
 {
-    detail::scanfs_helper(fs,
+    detail::actfs_helper(fs,
         make_index_sequence<sizeof...(Fs)>{},
         std::forward<Args>(args)...);
 }
@@ -370,7 +403,37 @@ scan(const std::tuple<Fs...>& fs, Args&&... args)
 
 /*****************************************************************************
  *
- * @brief zip_scan({f1,f2,...,fn}, {x1,x2,...,xn})
+ * @brief apply_at(i, {f0,f1,...,fn}, args...): fi(args...)
+ *        applies a functor contained in a tuple to some arguments
+ *
+ * @return void
+ *
+ *****************************************************************************/
+template<class... Fs, class... Args>
+inline void
+apply_at(std::size_t index, std::tuple<Fs...>& fs, Args&&... args)
+{
+    detail::apply_at_helper<sizeof...(Fs)>::apply(
+        index, fs, std::forward<Args>(args)...);
+}
+
+//---------------------------------------------------------
+template<class... Fs, class... Args>
+inline void
+apply_at(std::size_t index, const std::tuple<Fs...>& fs, Args&&... args)
+{
+    detail::apply_at_helper<sizeof...(Fs)>::apply(
+        index, fs, std::forward<Args>(args)...);
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief zip_act({f1,f2,...,fn}, {x1,x2,...,xn})
  *        applies each functor to each argument 1-by-1 and
  *        discards the results
  *
@@ -381,48 +444,48 @@ scan(const std::tuple<Fs...>& fs, Args&&... args)
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline void
-zip_scan(std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
+zip_act(std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
 {
     static_assert(sizeof...(Fs) == sizeof...(Xs),
         "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-    detail::zip_scan_helper(fs, xs,
+    detail::zip_act_helper(fs, xs,
         make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline void
-zip_scan(const std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
+zip_act(const std::tuple<Fs...>& fs, std::tuple<Xs...>& xs)
 {
     static_assert(sizeof...(Fs) == sizeof...(Xs),
         "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-    detail::zip_scan_helper(fs, xs,
+    detail::zip_act_helper(fs, xs,
         make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline void
-zip_scan(std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
+zip_act(std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 {
     static_assert(sizeof...(Fs) == sizeof...(Xs),
         "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-    detail::zip_scan_helper(fs, xs,
+    detail::zip_act_helper(fs, xs,
         make_index_sequence<sizeof...(Fs)>{});
 }
 
 //---------------------------------------------------------------
 template<class... Fs, class... Xs>
 inline void
-zip_scan(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
+zip_act(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 {
     static_assert(sizeof...(Fs) == sizeof...(Xs),
         "zip_map(tuple<Fs>, tuple<Xs>): #Fs must be equal to #Xs");
 
-    detail::zip_scan_helper(fs, xs,
+    detail::zip_act_helper(fs, xs,
         make_index_sequence<sizeof...(Fs)>{});
 }
 

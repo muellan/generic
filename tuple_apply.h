@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -19,7 +19,6 @@
 
 
 namespace am {
-
 namespace gen {
 
 namespace detail {
@@ -51,7 +50,7 @@ apply_helper(F&& f, Tuple&& t, index_sequence<ns...>)
 
 /*****************************************************************************
  *
- * @brief calls a callable object with a tuple of arguments
+ * @brief invokes a callable object with a tuple of arguments
  *
  *****************************************************************************/
 template<class F, class...T>
@@ -74,7 +73,6 @@ apply(F&& f, const std::tuple<T...>& t)
 
 
 }  // namespace gen
-
 }  // namespace am
 
 

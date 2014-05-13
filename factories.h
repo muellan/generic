@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -70,8 +70,8 @@ template<class T>
 typename detail::_Unique_if<T>::_Unknown_bound
 make_unique(size_t n)
 {
-    using U__ = typename std::remove_extent<T>::type;
-    return std::unique_ptr<T>(new U__[n]());
+    using U_t_ = typename std::remove_extent<T>::type;
+    return std::unique_ptr<T>(new U_t_[n]());
 }
 
 //---------------------------------------------------------
@@ -102,27 +102,27 @@ namespace detail {
 
 //-------------------------------------------------------------------
 template<class T>
-inline constexpr
-T&& constant(T&& t, int) {
-    return std::forward<T>(t);
+inline constexpr const T&
+constant(const T& t, int) {
+    return t;
 }
 
 //---------------------------------------------------------
 /// @brief general case
 template<class Target, class Arg, std::size_t... ints>
 inline constexpr Target
-make_uniform__(Target*, Arg&& a, index_sequence<ints...>)
+make_uniform_t_(Target*, const Arg& a, index_sequence<ints...>)
 {
-    return Target{constant(std::forward<Arg>(a),ints)...};
+    return Target{constant(a,ints)...};
 }
 
 //---------------------------------------------------------
 /// @brief specialization for std::array
 template<class T, std::size_t n, class Arg, std::size_t... ints>
 inline constexpr std::array<T,n>
-make_uniform__(std::array<T,n>*, Arg&& a, index_sequence<ints...>)
+make_uniform_t_(std::array<T,n>*, const Arg& a, index_sequence<ints...>)
 {
-    return std::array<T,n>{{constant(std::forward<Arg>(a),ints)...}};
+    return std::array<T,n>{{constant(a,ints)...}};
 }
 
 
@@ -135,7 +135,7 @@ template<class Target, std::size_t n = std::tuple_size<Target>::value, class Arg
 inline constexpr Target
 make_uniform(Arg&& a)
 {
-    return detail::make_uniform__(static_cast<Target*>(nullptr),
+    return detail::make_uniform_t_(static_cast<Target*>(nullptr),
         std::forward<Arg>(a), make_index_sequence<n>{});
 }
 
@@ -157,7 +157,7 @@ namespace detail {
 //-------------------------------------------------------------------
 template<class Generator>
 inline constexpr auto
-make_generate_call__(Generator&& g, int) -> decltype(g())
+make_generate_call_t_(Generator&& g, int) -> decltype(g())
 {
     return g();
 }
@@ -166,32 +166,32 @@ make_generate_call__(Generator&& g, int) -> decltype(g())
 /// @brief general case
 template<class Target, class Generator, std::size_t... ints>
 inline constexpr Target
-make_generate__(Target*, Generator&& g, index_sequence<ints...>)
+make_generate_t_(Target*, Generator&& g, index_sequence<ints...>)
 {
     return Target{
-        make_generate_call__(std::forward<Generator>(g),ints)...};
+        make_generate_call_t_(std::forward<Generator>(g),ints)...};
 }
 
 //---------------------------------------------------------
 /// @brief specialization for std::array
 template<class T, std::size_t n, class Generator, std::size_t... ints>
 inline constexpr std::array<T,n>
-make_generate__(std::array<T,n>*, Generator&& g, index_sequence<ints...>)
+make_generate_t_(std::array<T,n>*, Generator&& g, index_sequence<ints...>)
 {
     return std::array<T,n>{
-        {make_generate_call__(std::forward<Generator>(g),ints)...} };
+        {make_generate_call_t_(std::forward<Generator>(g),ints)...} };
 }
 
 }  // namespace detail
 
 
 //-----------------------------------------------------
-/// @brief calls multi-param ctor of 'Target' with n times 'g'
+/// @brief calls multi-param ctor of 'Target' with n times the result of 'g()'
 template<class Target, std::size_t n = std::tuple_size<Target>::value, class Generator>
 inline constexpr Target
 make_generate(Generator&& g)
 {
-    return detail::make_generate__(static_cast<Target*>(nullptr),
+    return detail::make_generate_t_(static_cast<Target*>(nullptr),
         std::forward<Generator>(g), make_index_sequence<n>{});
 }
 
@@ -214,7 +214,7 @@ namespace detail {
 //-------------------------------------------------------------------
 template<class Target, class Source, std::size_t... ints>
 inline constexpr Target
-make_copy__(
+make_with_elems_t_(
     Target*,
     const Source& source,
     gen::index_sequence<ints...>)
@@ -225,7 +225,7 @@ make_copy__(
 //---------------------------------------------------------
 template<std::size_t n, class T, class Source, std::size_t... ints>
 inline constexpr std::array<T,n>
-make_copy__(
+make_with_elems_t_(
     std::array<T,n>*,
     const Source& source,
     gen::index_sequence<ints...>)
@@ -245,9 +245,9 @@ template<
     class Source
 >
 inline constexpr Target
-make_copy(const Source& src)
+make_with_elems(const Source& src)
 {
-    return detail::make_copy__(static_cast<Target*>(nullptr),
+    return detail::make_with_elems_t_(static_cast<Target*>(nullptr),
         src, make_index_sequence<n>{});
 }
 

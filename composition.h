@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -70,7 +70,7 @@ struct function_composition_call<1>
 template<class... Fns>
 class function_composition
 {
-    using this_t = function_composition<Fns...>;
+    using this_t_ = function_composition<Fns...>;
     using call_t = detail::function_composition_call<sizeof...(Fns)>;
     using fns_t  = std::tuple<Fns...>;
 

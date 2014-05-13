@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -64,7 +64,7 @@ struct application_chain_call<0>
 template<class... Fns>
 class application_chain
 {
-    using this_t = application_chain<Fns...>;
+    using this_t_ = application_chain<Fns...>;
     using call_t = detail::application_chain_call<sizeof...(Fns)>;
     using fns_t  = std::tuple<Fns...>;
 

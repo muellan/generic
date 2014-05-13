@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -90,17 +90,17 @@ void using_tuple_map()
 
 
 //-------------------------------------------------------------------
-void using_tuple_scan()
+void using_tuple_act()
 {
 
     {
-        scan(fv2{}, std::make_tuple(1,2,3.0));
+        act(fv2{}, std::make_tuple(1,2,3.0));
     }
 
     {
         int i = 1;
 
-        scan(
+        act(
             [&i](double x){std::cout << (i*x) << ' '; i *= 2; } ,
             std::make_tuple(1,2,3,4));
 
@@ -108,7 +108,7 @@ void using_tuple_scan()
     }
 
     {
-        scan(std::tuple<fv1,fv2>{}, 1);
+        act(std::tuple<fv1,fv2>{}, 1);
     }
 
     {
@@ -119,7 +119,7 @@ void using_tuple_scan()
 
         auto xs = std::make_tuple(1,2,3);
 
-        gen::zip_scan(fs,xs);
+        gen::zip_act(fs,xs);
     }
 }
 

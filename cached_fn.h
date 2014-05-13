@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -39,11 +39,11 @@ class cached_function; //not available
 template<class Ret, class... Args>
 class cached_function<Ret(Args...)>
 {
-    using arg__ = std::tuple<typename std::decay<Args>::type...>;
+    using arg_t_ = std::tuple<typename std::decay<Args>::type...>;
 
-    using functor__ = std::function<Ret(Args...)>;
+    using functor_t_ = std::function<Ret(Args...)>;
 
-    using hasher__ = tuple_hash<typename std::decay<Args>::type...>;
+    using hasher_t_ = tuple_hash<typename std::decay<Args>::type...>;
 
 public:
     //---------------------------------------------------------------
@@ -53,8 +53,13 @@ public:
     //---------------------------------------------------------------
     ///@brief construct with function object
     explicit
-    cached_function(const functor__& fn):
+    cached_function(const functor_t_& fn):
         fn_(fn), mutables_(), mem_()
+    {}
+    //-----------------------------------------------------
+    explicit
+    cached_function(functor_t_&& fn):
+        fn_(std::move(fn)), mutables_(), mem_()
     {}
 
     //-----------------------------------------------------
@@ -67,11 +72,9 @@ public:
         fn_(std::move(src.fn_)), mutables_(), mem_(std::move(src.mem_))
     {}
 
-
     //---------------------------------------------------------------
     ///@brief default copy assignment operator
-    cached_function&
-    operator = (const cached_function&) = default;
+    cached_function& operator = (const cached_function&) = default;
 
     //-----------------------------------------------------
     ///@brief move assignment operator
@@ -84,10 +87,11 @@ public:
         return *this;
     }
 
+
     //---------------------------------------------------------------
     ///@brief resets functor member and clears cache
     cached_function&
-    operator = (const functor__& fn)
+    operator = (const functor_t_& fn)
     {
         mem_.clear();
         fn_ = fn;
@@ -101,12 +105,13 @@ public:
     operator() (const Args&... args) const  //logically const
     {
         //pack arguments into tuple
-        auto arg = arg__{args...};
+        const auto arg = arg_t_{args...};
 
+        //protect agains concurrent calls
         auto lock = std::unique_lock<std::mutex>{mutables_};
 
         //if result cached -> return cached value
-        auto it = mem_.find(arg);
+        const auto it = mem_.find(arg);
         if(it != mem_.end()) {
             return it->second;
         }
@@ -117,12 +122,12 @@ public:
 
 
 private:
-    functor__ fn_;
+    functor_t_ fn_;
 
     //note: mutable preserves the const-ness of operator() which
     //one would expected from a normal function call
     mutable std::mutex mutables_;
-    mutable std::unordered_map<arg__,result_type,hasher__> mem_;
+    mutable std::unordered_map<arg_t_,result_type,hasher_t_> mem_;
 };
 
 
@@ -141,25 +146,25 @@ namespace detail {
 
 
 template<class T>
-struct make_cached__
+struct make_cached_t_
 {
-    using type = typename make_cached__<decltype(&T::operator())>::type;
+    using type = typename make_cached_t_<decltype(&T::operator())>::type;
 };
 
 template<class F, class T, class... Xs>
-struct make_cached__<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)>
+struct make_cached_t_<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)>
 {
     using type = cached_function<F(Xs...)>;
 };
 
 template<class F, class T, class... Xs>
-struct make_cached__<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)const>
+struct make_cached_t_<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)const>
 {
     using type = cached_function<F(Xs...)>;
 };
 
 template<class F, class... Xs>
-struct make_cached__<std::function<F(Xs...)> (*)(std::function<F(Xs...)>)>
+struct make_cached_t_<std::function<F(Xs...)> (*)(std::function<F(Xs...)>)>
 {
     using type = cached_function<F(Xs...)>;
 };
@@ -171,10 +176,10 @@ struct make_cached__<std::function<F(Xs...)> (*)(std::function<F(Xs...)>)>
 
 //-------------------------------------------------------------------
 template<class T>
-typename detail::make_cached__<T>::type
+typename detail::make_cached_t_<T>::type
 make_cached(T f)
 {
-    return typename detail::make_cached__<T>::type(f);
+    return typename detail::make_cached_t_<T>::type(f);
 }
 */
 

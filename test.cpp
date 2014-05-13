@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008-2014 André Müller
+ * 2008 - 2014 André Müller
  *
  *****************************************************************************/
 
@@ -15,6 +15,7 @@
 //#define AM_USE_DEMOS
 
 #include "chain_apply.h"
+#include "concat.h"
 #include "composition.h"
 #include "factories.h"
 #include "int_sequence.h"
