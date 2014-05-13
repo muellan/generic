@@ -31,10 +31,16 @@ Classes
 </p>
 
 Type Traits
-- map_bool_trait<br/>
+- all<br/>
 <p>
-  maps a type trait modeled on std::integral_constant<bool,.> to
-  a variadic type sequence "variadic 'AND' type trait mapping" 
+  maps logical AND over a variadic sequence of type traits modeled on 
+  std::integral_constant<bool,.>
+</p>
+
+- any<br/>
+<p>
+  maps logical OR over a variadic sequence of type traits modeled on 
+  std::integral_constant<bool,.>
 </p>
 
 
