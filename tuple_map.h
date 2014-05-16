@@ -4,7 +4,7 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
@@ -19,7 +19,6 @@
 
 
 namespace am {
-
 namespace gen {
 
 namespace detail {
@@ -125,14 +124,14 @@ struct apply_at_helper
 {
     template<class Fs, class... Args>
     static void
-    apply(std::size_t index, Fs&& fs, Args&&... args) {
+    apply(Fs&& fs, std::size_t index, Args&&... args) {
 
         using std::get;
         if(index == (n-1)) {
             get<n-1>(fs)(std::forward<Args>(args)...);
         } else {
-            apply_at_helper<n-1>::apply(index,
-                std::forward<Fs>(fs), std::forward<Args>(args)...);
+            apply_at_helper<n-1>::apply(
+                std::forward<Fs>(fs), index, std::forward<Args>(args)...);
         }
     }
 };
@@ -143,7 +142,40 @@ struct apply_at_helper<0>
 {
     template<class Fs, class... Args>
     static void
-    apply(std::size_t, Fs&&, Args&&...) {}
+    apply(Fs&&, std::size_t, Args&&...) {}
+};
+
+
+
+
+/*****************************************************************************
+ *
+ *
+ *****************************************************************************/
+template<std::size_t n>
+struct apply_op_at_helper
+{
+    template<class Op, class Fs>
+    static void
+    apply(Op&& op, Fs&& fs, std::size_t index) {
+
+        using std::get;
+        if(index == (n-1)) {
+            op(get<n-1>(fs));
+        } else {
+            apply_at_helper<n-1>::apply(
+                std::forward<Op>(op), std::forward<Fs>(fs), index);
+        }
+    }
+};
+
+//---------------------------------------------------------
+template<>
+struct apply_op_at_helper<0>
+{
+    template<class Op, class Fs>
+    static void
+    apply(Op&&, Fs&&, std::size_t) {}
 };
 
 
@@ -411,19 +443,49 @@ act(const std::tuple<Fs...>& fs, Args&&... args)
  *****************************************************************************/
 template<class... Fs, class... Args>
 inline void
-apply_at(std::size_t index, std::tuple<Fs...>& fs, Args&&... args)
+apply_at(std::tuple<Fs...>& fs, std::size_t index, Args&&... args)
 {
     detail::apply_at_helper<sizeof...(Fs)>::apply(
-        index, fs, std::forward<Args>(args)...);
+        fs, index, std::forward<Args>(args)...);
 }
 
 //---------------------------------------------------------
 template<class... Fs, class... Args>
 inline void
-apply_at(std::size_t index, const std::tuple<Fs...>& fs, Args&&... args)
+apply_at(const std::tuple<Fs...>& fs, std::size_t index, Args&&... args)
 {
     detail::apply_at_helper<sizeof...(Fs)>::apply(
-        index, fs, std::forward<Args>(args)...);
+        fs, index, std::forward<Args>(args)...);
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *
+ * @brief apply_at(op, {f0,f1,...,fn}, i): op(fi)
+ *        applies a functor to an element contained in a tuple
+ *
+ * @return void
+ *
+ *****************************************************************************/
+template<class... Fs, class Op>
+inline void
+apply_at(Op&& op, std::tuple<Fs...>& fs, std::size_t index)
+{
+    detail::apply_op_at_helper<sizeof...(Fs)>::apply(
+        std::forward<Op>(op), fs, index);
+}
+
+//---------------------------------------------------------
+template<class... Fs, class Op>
+inline void
+apply_at(Op&& op, const std::tuple<Fs...>& fs, std::size_t index)
+{
+    detail::apply_op_at_helper<sizeof...(Fs)>::apply(
+        std::forward<Op>(op), fs, index);
 }
 
 
@@ -492,9 +554,7 @@ zip_act(const std::tuple<Fs...>& fs, const std::tuple<Xs...>& xs)
 
 
 }  // namespace gen
-
 }  // namespace am
-
 
 
 #endif
