@@ -3,6 +3,11 @@ AM generic
 
 Collection of some tools for generic programming in C++11
 
+Note: 
+All classes and functions are work in progress. Interfaces are still likely 
+to change over time and documentation is very poor so far. 
+
+
 All components are header-only.
 
 
