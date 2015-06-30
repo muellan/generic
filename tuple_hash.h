@@ -4,12 +4,12 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2015 André Müller
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_TUPLE_HASH_H_
-#define AM_GENERIC_TUPLE_HASH_H_
+#ifndef AMLIB_GENERIC_TUPLE_HASH_H_
+#define AMLIB_GENERIC_TUPLE_HASH_H_
 
 
 #include <tuple>
@@ -86,8 +86,7 @@ private:
     static result_type
     make_hash(const argument_type& t, index_sequence<idx...>)
     {
-        using std::get;
-        return detail::combine_hashes<result_type,T...>::get(get<idx>(t)...);
+        return detail::combine_hashes<result_type,T...>::get(std::get<idx>(t)...);
     }
 
 };

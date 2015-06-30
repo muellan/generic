@@ -4,12 +4,12 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2015 André Müller
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_MEMOIZING_FUNCTION_H_
-#define AM_GENERIC_MEMOIZING_FUNCTION_H_
+#ifndef AMLIB_GENERIC_MEMOIZING_FUNCTION_H_
+#define AMLIB_GENERIC_MEMOIZING_FUNCTION_H_
 
 #include <type_traits>
 #include <functional>
@@ -58,7 +58,7 @@ public:
     {}
     //-----------------------------------------------------
     explicit
-    cached_function(functor_t_&& fn):
+    cached_function(functor_t_&& fn) noexcept :
         fn_(std::move(fn)), mutables_(), mem_()
     {}
 
@@ -68,7 +68,7 @@ public:
 
     //-----------------------------------------------------
     ///@brief move constructor
-    cached_function(cached_function&& src):
+    cached_function(cached_function&& src) noexcept :
         fn_(std::move(src.fn_)), mutables_(), mem_(std::move(src.mem_))
     {}
 
@@ -79,7 +79,7 @@ public:
     //-----------------------------------------------------
     ///@brief move assignment operator
     cached_function&
-    operator = (cached_function&& src)
+    operator = (cached_function&& src) noexcept
     {
         using std::swap;
         swap(fn_, src.fn_);
@@ -105,10 +105,10 @@ public:
     operator() (const Args&... args) const  //logically const
     {
         //pack arguments into tuple
-        const auto arg = arg_t_{args...};
+        const arg_t_ arg {args...};
 
         //protect agains concurrent calls
-        auto lock = std::unique_lock<std::mutex>{mutables_};
+        std::lock_guard<std::mutex> lock {mutables_};
 
         //if result cached -> return cached value
         const auto it = mem_.find(arg);

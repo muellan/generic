@@ -11,9 +11,7 @@
 #ifndef AM_GENERIC_TESTS_H_
 #define AM_GENERIC_TESTS_H_
 
-//#define AM_USE_TESTS
-//#define AM_USE_DEMOS
-
+#include "callable.h"
 #include "chain_apply.h"
 #include "concat.h"
 #include "composition.h"
@@ -35,12 +33,11 @@ using namespace am::gen;
 //-------------------------------------------------------------------
 int main()
 {
-//    demo::using_cached_fn_1();
-//    demo::using_cached_fn_2();
-//    demo::using_tuple_map();
-//    demo::using_tuple_scan();
-
-    return 0;
+    #ifdef USE_DEMOS
+        demo::using_cached_fn_1();
+        demo::using_cached_fn_2();
+        demo::using_for_each();
+    #endif
 }
 
 

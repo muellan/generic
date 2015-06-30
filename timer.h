@@ -4,13 +4,14 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2011-2015 André Müller
  *
  *****************************************************************************/
 
 #ifndef AM_TIMER_H
 #define AM_TIMER_H
 
+#include <sstream>
 #include <ctime>
 #include <ratio>
 #include <chrono>
@@ -33,7 +34,7 @@ class timer
 public:
     //---------------------------------------------------------------
     void
-    start() {
+    start() noexcept {
         if(!running_) {
             running_ = true;
             start_ = std::chrono::high_resolution_clock::now();
@@ -41,20 +42,20 @@ public:
     }
     //-----------------------------------------------------
     void
-    reset() {
+    reset() noexcept {
         total_ = basic_duration_t(0);
         running_ = false;
     }
     //-----------------------------------------------------
     void
-    restart() {
+    restart() noexcept {
         reset();
         start();
     }
 
     //-----------------------------------------------------
     void
-    stop() {
+    stop() noexcept {
         if(running_) {
             stop_ = std::chrono::high_resolution_clock::now();
             total_ += std::chrono::duration_cast<basic_duration_t>(stop_-start_);
@@ -64,34 +65,32 @@ public:
 
 
     //---------------------------------------------------------------
-    // GETTERS
-    //---------------------------------------------------------------
     bool
-    running() const {
+    running() const noexcept {
         return running_;
     }
 
     //-----------------------------------------------------
     int64_t
-    milliseconds() const {
+    milliseconds() const noexcept {
         return std::chrono::duration_cast<
             std::chrono::milliseconds>(current()).count();
     }
 
     int64_t
-    full_seconds() const {
+    full_seconds() const noexcept {
         return std::chrono::duration_cast<
             std::chrono::seconds>(current()).count();
     }
 
     int
-    full_minutes() const {
+    full_minutes() const noexcept {
         return std::chrono::duration_cast<
             std::chrono::minutes>(current()).count();
     }
 
     int
-    full_hours() const {
+    full_hours() const noexcept {
         return std::chrono::duration_cast<
             std::chrono::hours>(current()).count();
     }
@@ -99,25 +98,40 @@ public:
 
     //-----------------------------------------------------
     double
-    seconds() const {
+    seconds() const noexcept {
         return (milliseconds() / 1000.0);
     }
 
     double
-    minutes() const {
+    minutes() const noexcept {
         return (milliseconds() / 60000.0);
     }
 
     double
-    hours() const {
+    hours() const noexcept {
         return (milliseconds() / 3600000.0);
+    }
+
+
+    //-----------------------------------------------------
+    std::string
+    hh_mm_ss() const noexcept
+    {
+        std::ostringstream ss;
+        int h = static_cast<int>(full_hours());
+        int m = static_cast<int>(full_minutes());
+        int s = static_cast<int>(full_seconds());
+        if(h < 10) ss << "0"; ss << h << ":";
+        if(m < 10) ss << "0"; ss << m << ":";
+        if(s < 10) ss << "0"; ss << s;
+        return ss.str();
     }
 
 
 private:
     //-----------------------------------------------------
     basic_duration_t
-    current() const {
+    current() const noexcept {
         if(!running_) return total_;
 
         return (
@@ -130,6 +144,7 @@ private:
     basic_duration_t total_ = basic_duration_t(0);
     bool running_ = false;
 };
+
 
 
 }  // namespace am

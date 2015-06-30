@@ -4,24 +4,19 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
-
-#ifdef AM_USE_DEMOS
 
 #include <cstdint>
 #include <iostream>
 
 #include "timer.h"
-
 #include "cached_fn.h"
 
 
 namespace am {
-
 namespace gen {
-
 namespace demo {
 
 
@@ -99,6 +94,7 @@ void using_cached_fn_2()
     do {
         i = 0;
         j = 0;
+        std::cout << "enter two natural numbers (0 to abort): " << std::flush;
         std::cin >> i >> j;
 
         if(i > 0 && j > 0) {
@@ -114,9 +110,5 @@ void using_cached_fn_2()
 
 
 }  // namespace demo
-
 }  // namespace gen
-
 }  // namespace am
-
-#endif

@@ -4,17 +4,15 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_CACHED_FUNCTION_DEMO_H_
-#define AM_GENERIC_CACHED_FUNCTION_DEMO_H_
+#ifndef AMLIB_GENERIC_CACHED_FUNCTION_DEMO_H_
+#define AMLIB_GENERIC_CACHED_FUNCTION_DEMO_H_
 
 namespace am {
-
 namespace gen {
-
 namespace demo {
 
 
@@ -23,9 +21,7 @@ void using_cached_fn_2();
 
 
 }  // namespace demo
-
 }  // namespace gen
-
 }  // namespace am
 
 

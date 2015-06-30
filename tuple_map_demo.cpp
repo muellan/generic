@@ -4,22 +4,19 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2014 André Müller
  *
  *****************************************************************************/
-
-#ifdef AM_USE_DEMOS
 
 #include <iostream>
 
 #include "tuple_map.h"
+
 #include "tuple_map_demo.h"
 
 
 namespace am {
-
 namespace gen {
-
 namespace demo {
 
 
@@ -90,17 +87,17 @@ void using_tuple_map()
 
 
 //-------------------------------------------------------------------
-void using_tuple_act()
+void using_for_each()
 {
 
     {
-        act(fv2{}, std::make_tuple(1,2,3.0));
+        gen::for_each_arg(fv2{}, std::make_tuple(1,2,3.0));
     }
 
     {
         int i = 1;
 
-        act(
+        gen::for_each_arg(
             [&i](double x){std::cout << (i*x) << ' '; i *= 2; } ,
             std::make_tuple(1,2,3,4));
 
@@ -108,7 +105,7 @@ void using_tuple_act()
     }
 
     {
-        act(std::tuple<fv1,fv2>{}, 1);
+        gen::for_each_function(std::tuple<fv1,fv2>{}, 1);
     }
 
     {
@@ -119,16 +116,12 @@ void using_tuple_act()
 
         auto xs = std::make_tuple(1,2,3);
 
-        gen::zip_act(fs,xs);
+        gen::zip_for_each(fs,xs);
     }
 }
 
 
 
 }  // namespace demo
-
 }  // namespace gen
-
 }  // namespace am
-
-#endif

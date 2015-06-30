@@ -4,12 +4,12 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2015 André Müller
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_TUPLE_APPLY_H_
-#define AM_GENERIC_TUPLE_APPLY_H_
+#ifndef AMLIB_GENERIC_TUPLE_APPLY_H_
+#define AMLIB_GENERIC_TUPLE_APPLY_H_
 
 #include <type_traits>
 #include <utility>
@@ -53,21 +53,31 @@ apply_helper(F&& f, Tuple&& t, index_sequence<ns...>)
  * @brief invokes a callable object with a tuple of arguments
  *
  *****************************************************************************/
-template<class F, class...T>
+template<class F>
 inline auto
-apply(F&& f, std::tuple<T...>& t)
-    -> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
+apply(F&& f, std::tuple<>) -> decltype(f())
 {
-    return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
+    return f();
+}
+
+//---------------------------------------------------------
+template<class F, class...Ts, class = typename
+         std::enable_if<(sizeof...(Ts) > 0),F>::type>
+inline auto
+apply(F&& f, std::tuple<Ts...>& t)
+    -> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(Ts)>{}))
+{
+    return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(Ts)>{});
 }
 
 //-----------------------------------------------------
-template<class F, class...T>
+template<class F, class...Ts, class = typename
+         std::enable_if<(sizeof...(Ts) > 0),F>::type>
 inline auto
-apply(F&& f, const std::tuple<T...>& t)
-    -> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{}))
+apply(F&& f, const std::tuple<Ts...>& t)
+    -> decltype(detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(Ts)>{}))
 {
-    return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(T)>{});
+    return detail::apply_helper(std::forward<F>(f),t,make_index_sequence<sizeof...(Ts)>{});
 }
 
 

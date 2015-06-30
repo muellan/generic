@@ -4,12 +4,12 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2015 André Müller
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_MAP_TRAIT_H_
-#define AM_GENERIC_MAP_TRAIT_H_
+#ifndef AMLIB_GENERIC_MAP_TRAIT_H_
+#define AMLIB_GENERIC_MAP_TRAIT_H_
 
 #include <type_traits>
 
@@ -29,22 +29,22 @@ struct any;
 
 template<>
 struct any<> :
-    public std::false_type
+    std::false_type
 {};
 
 template<class T1>
 struct any<T1> :
-    public T1
+    T1
 {};
 
 template<class T1, class T2>
 struct any<T1,T2> :
-    public std::conditional<T1::value,T1,T2>::type
+    std::conditional<T1::value,T1,T2>::type
 {};
 
 template<class T1, class T2, class T3, class... Ts>
 struct any<T1,T2,T3,Ts...> :
-    public std::conditional<T1::value,T1, any<T2,T3,Ts...>>::type
+    std::conditional<T1::value,T1, any<T2,T3,Ts...>>::type
 {};
 
 
@@ -63,22 +63,22 @@ struct all;
 
 template<>
 struct all<> :
-    public std::true_type
+    std::true_type
 {};
 
 template<class T1>
 struct all<T1> :
-    public T1
+    T1
 {};
 
 template<class T1, class T2>
 struct all<T1,T2> :
-    public std::conditional<T1::value,T2,T1>::type
+    std::conditional<T1::value,T2,T1>::type
 {};
 
 template<class T1, class T2, class T3, class... Ts>
 struct all<T1,T2,T3,Ts...> :
-    public std::conditional<T1::value, all<T2,T3,Ts...>,T1>::type
+    std::conditional<T1::value, all<T2,T3,Ts...>,T1>::type
 {};
 
 

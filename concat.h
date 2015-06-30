@@ -4,12 +4,12 @@
  *
  * released under MIT license
  *
- * 2008 - 2014 André Müller
+ * 2008-2015 André Müller
  *
  *****************************************************************************/
 
-#ifndef AM_GENERIC_CONCAT_H_
-#define AM_GENERIC_CONCAT_H_
+#ifndef AMLIB_GENERIC_CONCAT_H_
+#define AMLIB_GENERIC_CONCAT_H_
 
 
 #include <array>
@@ -19,8 +19,6 @@
 namespace am {
 namespace gen {
 
-
-//TODO am::gen::concat variadic arg list
 
 //-------------------------------------------------------------------
 template<std::size_t n, class T, std::size_t m>
