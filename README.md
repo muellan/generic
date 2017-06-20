@@ -3,143 +3,100 @@ AM generic
 
 Collection of some tools for generic programming in C++11
 
-Note: 
-All classes and functions are work in progress. Interfaces are still likely 
-to change over time and documentation is very poor so far. 
-
+**Note**: All classes and functions are work in progress.
+Interfaces are still likely to change over time and documentation is limited to some comments so far. 
 
 All components are header-only.
 
 
-Classes
--------
-- timer<br/>
-<p>
-  simple start-stop timer based on std::chrono
-</p>
-  
-- integer_sequence<br/>
-<p>
-  static integer sequence needed for variadic initialization/'exploding' 
-  something similar (and most likely better engineered) will be in the C++14
-  standard library
-</p> 
+## Classes
+
+#### integer&#95;sequence
+  static integer sequence needed for variadic initialization/'exploding' something similar
+  (and most likely better engineered) will be in the C++14 standard library
  
-- cached_function<br/>
-<p>
+#### cached&#95;function
   std::function - like wrapper with return value cache
-</p>
  
-- tuple_hash<br/>
-<p> 
+#### tuple&#95;hash
   xors std::hash values of tuple arguments together
-</p>
-
-Type Traits
-- all<br/>
-<p>
-  maps logical AND over a variadic sequence of type traits modeled on 
-  std::integral_constant<bool,.>
-</p>
-
-- any<br/>
-<p>
-  maps logical OR over a variadic sequence of type traits modeled on 
-  std::integral_constant<bool,.>
-</p>
 
 
-_Functions_
----------
-- make_function_composition<br/>
-<p>
+## Type Traits
+#### all
+  maps logical AND over a variadic sequence of type traits
+  modeled on std::integral&#95;constant<bool,.>
+
+#### any
+  maps logical OR over a variadic sequence of type traits
+  modeled on std::integral&#95;constant<bool,.>
+
+
+## Functions
+
+#### make&#95;function&#95;composition
   composes multiple function objects into one
-</p>
   
-- make_application_chain<br/>
-<p>
-  chains calls to 'apply(f_i, args...)' for multiple function objects 
-</p>
+#### make&#95;application&#95;chain
+  chains calls to 'apply(f&#95;i, args...)' for multiple function objects 
   
-- make_uniform<br/>
-<p>
+#### make&#95;uniform
   returns a copy of an object initialized with n times the same value
-</p>
 
-- make_generate<br/>
-<p>
-  returns a copy of an object initialized with n results obtained by 
+#### make&#95;generate
+  returns a copy of an object initialized with n results obtained by
   n calls to a generator object
-</p>
-  
-- make_copy_elems<br/><p>
-  returns a copy of an object initialized with n values obtained from n
-  subscript calls (with indices 0...n-1) to a source object
-</p>
-  
 
-- apply(function object, tuple&lt;arguments...&gt;)<br/>
-<p>
+#### make&#95;copy&#95;elems
+  returns a copy of an object initialized with n values obtained from
+  n subscript calls (with indices 0...n-1) to a source object
+
+#### apply(function object, tuple&lt;arguments...&gt;)
   explodes tuple arguments into function arguments
-</p>
-  
 
-- map(function object, tuple&lt;arguments...&gt;)<br/>
-<p>
+#### map(function object, tuple&lt;arguments...&gt;)
   applies a function object to each argument of a tuple of arguments<br/>
   returns a tuple of results<br/>
   map(f, {x1,x2,...,xn}) -> {f(x1),f(x2),...,f(xn)}
-</p>
   
 
-- map(tuple&lt;function_objects...&gt;, arguments...)<br/>
-<p>
+#### map(tuple&lt;function&#95;objects...&gt;, arguments...)
   applies each function object in a tuple to a series arguments<br/>
   returns a tuple of results<br/>
   map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
-</p>
   
 
-- zip_map(tuple&lt;function_objects...&gt;, tuple&lt;arguments...&gt;)<br/>
-<p>
-  applies each function_object to each argument 1-by-1<br/>
+#### zip&#95;map(tuple&lt;function&#95;objects...&gt;, tuple&lt;arguments...&gt;)
+  applies each function&#95;object to each argument 1-by-1<br/>
   returns a tuple of results<br/>
-  zip_map({f1,f2,...,fn}, {x1,x2,...,xn}) -> {f1(x1),f2(x2),...,fn(xn)}
-</p>
-  
+  zip&#95;map({f1,f2,...,fn}, {x1,x2,...,xn}) -> {f1(x1),f2(x2),...,fn(xn)}
 
-- for_each_arg(function_object, tuple&lt;arguments...&gt;)<br/>
-<p>
+
+#### for&#95;each&#95;arg(function&#95;object, tuple&lt;arguments...&gt;)
   applies a function object to each argument in a tuple of arguments<br/>
   discards the results and returns void<br/>
-  for_each_arg(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
-</p>
+  for&#95;each&#95;arg(f, {x1,x2,...,xn}): {f(x1); f(x2); ...; f(xn);}
   
 
-- for_each_function(tuple&lt;function...&gt;, arguments...)<br/>
-<p>
+#### for&#95;each&#95;function(tuple&lt;function...&gt;, arguments...)
   applies each function object to all arguments in turn<br/>
   discards the results and returns void<br/>
-  for_each_function({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
-</p>
+  for&#95;each&#95;function({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
   
-  
-- zip_for_each(tuple&lt;function_objects...&gt;, tuple&lt;arguments...&gt;)<br/>
-<p>
+
+#### zip&#95;for&#95;each(tuple&lt;function&#95;objects...&gt;, tuple&lt;arguments...&gt;)
   applies each function object to each argument 1-by-1<br/>
   discards the results and returns void<br/>
-  zip_for_each({f1,f2,...,fn}, {x1,x2,...,xn}) {f1(x1); f2(x2); ...; fn(xn);}
-</p>
+  zip&#95;for&#95;each({f1,f2,...,fn}, {x1,x2,...,xn}) {f1(x1); f2(x2); ...; fn(xn);}
 
 
-Requirements
-------------
+## Requirements
  - variadic templates
  - template aliases
  - std::tuple
  - std::array
- - std::unordered_map
+ - std::unordered&#95;map
  - &lt;chrono&gt;
- - &lt;type_traits&gt;
+ - &lt;type&#95;traits&gt;
 
 tested with g++ 4.7.2

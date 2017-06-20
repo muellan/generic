@@ -10,14 +10,7 @@
 
 #include <iostream>
 
-#include "tuple_map.h"
-
-#include "tuple_map_demo.h"
-
-
-namespace am {
-namespace gen {
-namespace demo {
+#include "../include/tuple_map.h"
 
 
 //---------------------------------------------------------------
@@ -51,6 +44,8 @@ struct fv2 {
 //-------------------------------------------------------------------
 void using_tuple_map()
 {
+    using namespace am::gen;
+
     {
         auto xs = std::tuple<int,int,double>{1,1,1.0};
         auto fcxs = map(fc{}, xs);
@@ -75,7 +70,7 @@ void using_tuple_map()
             [](int i){return 8*i; });
 
         auto xs = std::make_tuple(1,2,3);
-        auto fsxs = gen::zip_map(fs,xs);
+        auto fsxs = zip_map(fs,xs);
 
         std::cout
             << std::get<0>(fsxs) <<' '
@@ -89,15 +84,16 @@ void using_tuple_map()
 //-------------------------------------------------------------------
 void using_for_each()
 {
+    using namespace am::gen;
 
     {
-        gen::for_each_arg(fv2{}, std::make_tuple(1,2,3.0));
+        for_each_arg(fv2{}, std::make_tuple(1,2,3.0));
     }
 
     {
         int i = 1;
 
-        gen::for_each_arg(
+        for_each_arg(
             [&i](double x){std::cout << (i*x) << ' '; i *= 2; } ,
             std::make_tuple(1,2,3,4));
 
@@ -105,7 +101,7 @@ void using_for_each()
     }
 
     {
-        gen::for_each_function(std::tuple<fv1,fv2>{}, 1);
+        for_each_function(std::tuple<fv1,fv2>{}, 1);
     }
 
     {
@@ -116,12 +112,12 @@ void using_for_each()
 
         auto xs = std::make_tuple(1,2,3);
 
-        gen::zip_for_each(fs,xs);
+        zip_for_each(fs,xs);
     }
 }
 
-
-
-}  // namespace demo
-}  // namespace gen
-}  // namespace am
+int main()
+{
+    using_tuple_map();
+    using_for_each();
+}

@@ -11,13 +11,11 @@
 #include <cstdint>
 #include <iostream>
 
+#include "../include/cached_fn.h"
 #include "timer.h"
-#include "cached_fn.h"
 
 
-namespace am {
-namespace gen {
-namespace demo {
+using am::gen::cached_function;
 
 
 //-------------------------------------------------------------------
@@ -44,9 +42,6 @@ void using_cached_fn_1()
     //make new cached_functions with signature double(int,float)
     //can take any callable object with return type double and
     //two int arguments
-
-    //note: automatic dedcution of the call signature seems to be hard,
-    //mabye I'll get back to it in the future...
 
     //with functions
     auto m1 = cached_function<double(int,int)>(my_fn);
@@ -98,7 +93,7 @@ void using_cached_fn_2()
         std::cin >> i >> j;
 
         if(i > 0 && j > 0) {
-            timer t;
+            am::timer t;
             t.start();
             auto x = m(i,j);
             t.stop();
@@ -109,6 +104,9 @@ void using_cached_fn_2()
 
 
 
-}  // namespace demo
-}  // namespace gen
-}  // namespace am
+//-------------------------------------------------------------------
+int main()
+{
+    using_cached_fn_1();
+    using_cached_fn_2();
+}

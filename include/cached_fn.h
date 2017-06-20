@@ -8,8 +8,8 @@
  *
  *****************************************************************************/
 
-#ifndef AMLIB_GENERIC_MEMOIZING_FUNCTION_H_
-#define AMLIB_GENERIC_MEMOIZING_FUNCTION_H_
+#ifndef AMLIB_GENERIC_CACHED_FUNCTION_H_
+#define AMLIB_GENERIC_CACHED_FUNCTION_H_
 
 #include <type_traits>
 #include <functional>
@@ -20,7 +20,6 @@
 
 
 namespace am {
-
 namespace gen {
 
 
@@ -41,7 +40,7 @@ class cached_function<Ret(Args...)>
 {
     using arg_t_ = std::tuple<typename std::decay<Args>::type...>;
 
-    using functor_t_ = std::function<Ret(Args...)>;
+    using function_t_ = std::function<Ret(Args...)>;
 
     using hasher_t_ = tuple_hash<typename std::decay<Args>::type...>;
 
@@ -53,12 +52,12 @@ public:
     //---------------------------------------------------------------
     ///@brief construct with function object
     explicit
-    cached_function(const functor_t_& fn):
+    cached_function(const function_t_& fn):
         fn_(fn), mutables_(), mem_()
     {}
     //-----------------------------------------------------
     explicit
-    cached_function(functor_t_&& fn) noexcept :
+    cached_function(function_t_&& fn) noexcept :
         fn_(std::move(fn)), mutables_(), mem_()
     {}
 
@@ -91,7 +90,7 @@ public:
     //---------------------------------------------------------------
     ///@brief resets functor member and clears cache
     cached_function&
-    operator = (const functor_t_& fn)
+    operator = (const function_t_& fn)
     {
         mem_.clear();
         fn_ = fn;
@@ -122,7 +121,7 @@ public:
 
 
 private:
-    functor_t_ fn_;
+    function_t_ fn_;
 
     //note: mutable preserves the const-ness of operator() which
     //one would expected from a normal function call
@@ -132,60 +131,7 @@ private:
 
 
 
-
-
-
-/*****************************************************************************
- *
- *
- *
- *
- *****************************************************************************/
-/*
-namespace detail {
-
-
-template<class T>
-struct make_cached_t_
-{
-    using type = typename make_cached_t_<decltype(&T::operator())>::type;
-};
-
-template<class F, class T, class... Xs>
-struct make_cached_t_<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)>
-{
-    using type = cached_function<F(Xs...)>;
-};
-
-template<class F, class T, class... Xs>
-struct make_cached_t_<std::function<F(Xs...)> (T::*)(std::function<F(Xs...)>)const>
-{
-    using type = cached_function<F(Xs...)>;
-};
-
-template<class F, class... Xs>
-struct make_cached_t_<std::function<F(Xs...)> (*)(std::function<F(Xs...)>)>
-{
-    using type = cached_function<F(Xs...)>;
-};
-
-
-}  // namespace detail
-
-
-
-//-------------------------------------------------------------------
-template<class T>
-typename detail::make_cached_t_<T>::type
-make_cached(T f)
-{
-    return typename detail::make_cached_t_<T>::type(f);
-}
-*/
-
-
 }  // namespace gen
-
 }  // namespace am
 
 #endif
