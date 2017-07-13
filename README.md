@@ -1,15 +1,15 @@
 AM generic
 ==========
 
-Collection of some tools for generic programming in C++11
+Header-only collection of generic programming tools for C++11.
 
 **Note**: All classes and functions are work in progress.
 Interfaces are still likely to change over time and documentation is limited to some comments so far. 
 
-All components are header-only.
 
+## Quick Overview
 
-## Classes
+### Classes
 
 #### integer&#95;sequence
   static integer sequence needed for variadic initialization/'exploding' something similar
@@ -22,7 +22,7 @@ All components are header-only.
   xors std::hash values of tuple arguments together
 
 
-## Type Traits
+### Type Traits
 #### all
   maps logical AND over a variadic sequence of type traits
   modeled on std::integral&#95;constant<bool,.>
@@ -32,7 +32,7 @@ All components are header-only.
   modeled on std::integral&#95;constant<bool,.>
 
 
-## Functions
+### Functions
 
 #### make&#95;function&#95;composition
   composes multiple function objects into one
