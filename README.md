@@ -61,9 +61,9 @@ Interfaces are still likely to change over time and documentation is limited to 
   
 
 #### map(tuple&lt;function&#95;objects...&gt;, arguments...)
-  applies each function object in a tuple to a series arguments<br/>
+  applies each function object in a tuple to a series of arguments<br/>
   returns a tuple of results<br/>
-  map({f1,f2,...,fn}, x1,x2,...,xn) -> {f1(x1,...,xn),...,fn(x1,...,xn)}
+  map({f1,f2,...,fn}, x1,x2,...,xm) -> {f1(x1,...,xm),...,fn(x1,...,xm)}
   
 
 #### zip&#95;map(tuple&lt;function&#95;objects...&gt;, tuple&lt;arguments...&gt;)
