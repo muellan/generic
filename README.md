@@ -81,7 +81,7 @@ Interfaces are still likely to change over time and documentation is limited to 
 #### for&#95;each&#95;function(tuple&lt;function...&gt;, arguments...)
   applies each function object to all arguments in turn<br/>
   discards the results and returns void<br/>
-  for&#95;each&#95;function({f1,f2,...,fn}, x1,x2,...,xn): {f1(x1,...,xn); ...; fn(x1,...,xn);}
+  for&#95;each&#95;function({f1,f2,...,fn}, x1,x2,...,xm): {f1(x1,...,xm); ...; fn(x1,...,xm);}
   
 
 #### zip&#95;for&#95;each(tuple&lt;function&#95;objects...&gt;, tuple&lt;arguments...&gt;)
