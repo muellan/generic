@@ -1,13 +1,3 @@
-/*****************************************************************************
- *
- * AM utilities
- *
- * released under MIT license
- *
- * 2008-2017 André Müller
- *
- *****************************************************************************/
-
 #ifndef AMLIB_TIMER_H_
 #define AMLIB_TIMER_H_
 
@@ -129,9 +119,9 @@ public:
         int h = static_cast<int>(full_hours());
         int m = static_cast<int>(full_minutes());
         int s = static_cast<int>(full_seconds());
-        if(h < 10) ss << "0"; ss << h << ":";
-        if(m < 10) ss << "0"; ss << m << ":";
-        if(s < 10) ss << "0"; ss << s;
+        if(h < 10) { ss << "0"; } ss << h << ":";
+        if(m < 10) { ss << "0"; } ss << m << ":";
+        if(s < 10) { ss << "0"; } ss << s;
         return ss.str();
     }
 

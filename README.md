@@ -99,4 +99,5 @@ Interfaces are still likely to change over time and documentation is limited to 
  - &lt;chrono&gt;
  - &lt;type&#95;traits&gt;
 
-tested with g++ 4.7.2
+tested with g++ {4.7.2, 5.4, 7.2}, clang++ 5.0.2
+

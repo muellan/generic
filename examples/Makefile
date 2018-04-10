@@ -1,6 +1,7 @@
 .PHONY: clean 
 
 INCLUDE  = ../include
+CXX      = g++
 FILTER   = *
 SOURCES  = $(wildcard $(FILTER).cpp)
 EXECS    = $(notdir $(SOURCES:.cpp=))
@@ -14,7 +15,7 @@ clean:
 	find -type f -not -name "*.cpp" -not -name "*.h" -not -name "Makefile" -not -name "runall" | xargs rm
 
 cached_fn : cached_fn.cpp $(INCLUDE)/cached_fn.h timer.h
-	g++ $(FLAGS) -o $@ $<
+	$(CXX) $(FLAGS) -o $@ $<
 
 tuple_map : tuple_map.cpp $(INCLUDE)/tuple_map.h
-	g++ $(FLAGS) -o $@ $<
+	$(CXX) $(FLAGS) -o $@ $<
